@@ -24,7 +24,7 @@ public class ExploAgent extends abstractAgent {
 	 */
 	private HashMap<String, CustomCouple<Date, List<Attribute>>> knowledge = new HashMap<String, CustomCouple<Date,List<Attribute>>>();
 	private IProtocol protocol;
-	private IStrategy strategy;
+	// private IStrategy strategy;
 	
 
 	/**
@@ -43,6 +43,8 @@ public class ExploAgent extends abstractAgent {
 		if(args[0]!=null){
 
 			deployAgent((Environment) args[0]);
+			protocol = (IProtocol) args[1];
+			//protocol.setMyAgent(this);
 
 		}else{
 			System.err.println("Malfunction during parameter's loading of agent"+ this.getClass().getName());
@@ -51,7 +53,8 @@ public class ExploAgent extends abstractAgent {
 
 		//Add the behaviours
 		//TODO
-		addBehaviour(new ObserveBehaviour(this, 1000));
+		this.protocol.addBehaviours(this);
+		//addBehaviour(new ObserveBehaviour(this, 1000));
 
 		System.out.println("the agent "+this.getLocalName()+ " is started");
 
@@ -94,16 +97,16 @@ public class ExploAgent extends abstractAgent {
 	/**
 	 * @return the strategy
 	 */
-	public IStrategy getStrategy() {
+	/*public IStrategy getStrategy() {
 		return strategy;
-	}
+	}*/
 
 	/**
 	 * @param strategy the strategy to set
 	 */
-	public void setStrategy(IStrategy strategy) {
+	/*public void setStrategy(IStrategy strategy) {
 		this.strategy = strategy;
-	}
+	}*/
 
 	/**
 	 * This method is automatically called after doDelete()

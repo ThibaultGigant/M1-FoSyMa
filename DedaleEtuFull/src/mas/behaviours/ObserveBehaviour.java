@@ -3,6 +3,7 @@ package mas.behaviours;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import mas.agents.ExploAgent;
 import mas.util.CustomCouple;
@@ -42,7 +43,7 @@ public class ObserveBehaviour extends TickerBehaviour {
 		//Example to retrieve the current position
 		String myPosition=((mas.abstractAgent)this.myAgent).getCurrentPosition();
 
-		if (myPosition!=""){
+		if (!myPosition.equals("")){
 			//List of observable from the agent's current position
 			List<Couple<String, List<Attribute>>> lobs=((mas.abstractAgent)this.myAgent).observe();
 			Date date = new Date();
@@ -51,7 +52,7 @@ public class ObserveBehaviour extends TickerBehaviour {
 				knowledge.put(couple.getLeft(), new CustomCouple<Date, List<Attribute>>(date, couple.getRight()));
 			}
 			((ExploAgent) this.myAgent).updateKnowledge(knowledge);
-
+			System.out.println("Agent " + this.myAgent.getLocalName() + " observes around position: " + myPosition);
 		}
 	}
 }

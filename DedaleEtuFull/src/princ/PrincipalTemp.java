@@ -19,7 +19,8 @@ import java.util.List;
 
 import env.Environment;
 import env.Environment.ENVtype;
-
+import mas.protocols.ExploProtocol;
+import mas.strategies.NewHorizon;
 
 
 public class PrincipalTemp {
@@ -230,7 +231,7 @@ public class PrincipalTemp {
 		agentName="Explo1";
 		try {
 
-			Object[] objtab=new Object[]{env};//used to give informations to the agent
+			Object[] objtab=new Object[]{env, new ExploProtocol()};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,ExploAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
@@ -245,7 +246,7 @@ public class PrincipalTemp {
 		try {
 
 
-			Object[] objtab=new Object[]{env};//used to give informations to the agent
+			Object[] objtab=new Object[]{env, new ExploProtocol()};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,ExploAgent.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
