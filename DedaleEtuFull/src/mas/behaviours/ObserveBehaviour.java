@@ -4,7 +4,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Date;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
+
+import FIPA.DateTime;
 import mas.agents.ExploAgent;
 import mas.util.CustomCouple;
 import env.Attribute;
@@ -42,14 +48,36 @@ public class ObserveBehaviour extends TickerBehaviour {
 		// TODO Auto-generated method stub
 		//Example to retrieve the current position
 		String myPosition=((mas.abstractAgent)this.myAgent).getCurrentPosition();
+		
+		Date date = new Date();
+		
+		try {
+			((ExploAgent)this.myAgent).getKnowledge().addNode(myPosition);
+		}
+		catch( Exception e) {
+		}
+		Node currentNode = ((ExploAgent)this.myAgent).getKnowledge().getNode(myPosition);
+		currentNode.addAttribute("visited", 1);
+		currentNode.addAttribute("date", date);
 
 		if (!myPosition.equals("")){
 			//List of observable from the agent's current position
 			List<Couple<String, List<Attribute>>> lobs=((mas.abstractAgent)this.myAgent).observe();
-			Date date = new Date();
-			HashMap<String, CustomCouple<Date, List<Attribute>>> knowledge = new HashMap<String, CustomCouple<Date,List<Attribute>>>();
+			Graph knowledge = new SingleGraph("observe");
+			Node newNode;
 			for (Couple<String, List<Attribute>> couple: lobs) {
-				knowledge.put(couple.getLeft(), new CustomCouple<Date, List<Attribute>>(date, couple.getRight()));
+				try {
+					knowledge.addNode(couple.getLeft());
+					newNode = knowledge.getNode(couple.getLeft()); 
+					newNode.addAttribute("visited", 0);
+					newNode.addAttribute("date", date);
+					knowledge.addEdge(newNode.getId() + currentNode.getId(), newNode, currentNode);
+				}
+				catch (Exception e) {
+					continue;
+				}
+				
+				// TODO add others attributes
 			}
 			((ExploAgent) this.myAgent).updateKnowledge(knowledge);
 			System.out.println("Agent " + this.myAgent.getLocalName() + " observes around position: " + myPosition);

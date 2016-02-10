@@ -5,8 +5,6 @@ package princ;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
-
-
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
@@ -16,6 +14,8 @@ import mas.agents.ExploAgent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.graphstream.ui.view.Viewer;
 
 import env.Environment;
 import env.Environment.ENVtype;
@@ -234,6 +234,7 @@ public class PrincipalTemp {
 			Object[] objtab=new Object[]{env, new ExploProtocol()};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,ExploAgent.class.getName(),objtab);
 			agentList.add(ag);
+			
 			System.out.println(agentName+" launched");
 		} catch (StaleProxyException e) {
 			// TODO Auto-generated catch block

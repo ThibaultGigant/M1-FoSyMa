@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
 
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.view.Viewer;
+
 import env.Attribute;
 import env.Environment;
 import mas.abstractAgent;
@@ -22,7 +28,8 @@ public class ExploAgent extends abstractAgent {
 	/**
 	 * Liste des connaissances pertinentes que l'agent a sur le monde
 	 */
-	private HashMap<String, CustomCouple<Date, List<Attribute>>> knowledge = new HashMap<String, CustomCouple<Date,List<Attribute>>>();
+	//private HashMap<String, CustomCouple<Date, List<Attribute>>> knowledge = new HashMap<String, CustomCouple<Date,List<Attribute>>>();
+	private Graph knowledge = new SingleGraph("knowledge");
 	private IProtocol protocol;
 	// private IStrategy strategy;
 	
@@ -37,7 +44,7 @@ public class ExploAgent extends abstractAgent {
 	protected void setup(){
 
 		super.setup();
-
+		
 		//get the parameters given into the object[]. In the current case, the environment where the agent will evolve
 		final Object[] args = getArguments();
 		if(args[0]!=null){
@@ -50,7 +57,7 @@ public class ExploAgent extends abstractAgent {
 			System.err.println("Malfunction during parameter's loading of agent"+ this.getClass().getName());
 			System.exit(-1);
 		}
-
+		
 		//Add the behaviours
 		//TODO
 		this.protocol.addBehaviours(this);
@@ -58,26 +65,72 @@ public class ExploAgent extends abstractAgent {
 
 		System.out.println("the agent "+this.getLocalName()+ " is started");
 
+		String defaultNodeStyle= "node {"+"fill-color: black;"+" size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
+		String nodeStyle_wumpus= "node.wumpus {"+"fill-color: red;"+"}";
+		String nodeStyle_agent= "node.agent {"+"fill-color: blue;"+"}";
+		String nodeStyle_treasure="node.treasure {"+"fill-color: yellow;"+"}";
+		String nodeStyle_EntryExit="node.exit {"+"fill-color: green;"+"}";
+		
+		String nodeStyle=defaultNodeStyle+nodeStyle_wumpus+nodeStyle_agent+nodeStyle_treasure+nodeStyle_EntryExit;
+		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+
+		this.getKnowledge().setAttribute("ui.stylesheet",nodeStyle);
+		Viewer viewer = this.getKnowledge().display();
 	}
 
 	/**
 	 * @return 
 	 * @return the knowledge
 	 */
-	public HashMap<String, CustomCouple<Date, List<Attribute>>> getKnowledge() {
+	public Graph getKnowledge() {
 		return knowledge;
 	}
 
 	/**
 	 * @param newKnowledge the knowledge of the other agent used to update the one of this agent
 	 */
-	public void updateKnowledge(HashMap<String, CustomCouple<Date, List<Attribute>>> newKnowledge) {
-		for (String pos: newKnowledge.keySet()) {
+	public boolean updateKnowledge(Graph newKnowledge) {
+		/*for (String pos: newKnowledge.keySet()) {
 			if ((knowledge.containsKey(pos) && knowledge.get(pos).getLeft().compareTo(newKnowledge.get(pos).getLeft()) < 0) || !knowledge.containsKey(pos)) {
 				knowledge.put(pos, newKnowledge.get(pos));
 			}
+		}*/
+		String id;
+		Node currentNode;
+		
+		boolean flag = false;
+		
+		for (Node node : newKnowledge.getEachNode()) {
+			id = node.getId();
+			currentNode = knowledge.getNode(id);
+			if (currentNode == null) {
+				knowledge.addNode(id);
+				for (String attr : node.getAttributeKeySet()) {
+					knowledge.getNode(id).setAttribute(attr, node.getAttribute(attr));
+				}
+				flag = true;
+			}
+			else if (((Date) node.getAttribute("date")).compareTo((Date) currentNode.getAttribute("date")) <= 0) {
+				continue;
+			}
+			else if ((int) node.getAttribute("visited") > (int) currentNode.getAttribute("visited") ) {
+				for (String attr : node.getAttributeKeySet()) {
+					currentNode.setAttribute(attr, node.getAttribute(attr));
+				}
+				flag = true;
+			}
 		}
 		
+		for (Edge edge : newKnowledge.getEachEdge()) {
+			try {
+				knowledge.addEdge(edge.getId(), edge.getNode0().getId(), edge.getNode1().getId());
+			}
+			catch (Exception e) {
+				continue;
+			}
+		}
+		
+		return flag;
 	}
 
 	/**

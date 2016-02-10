@@ -1,13 +1,8 @@
 package mas.strategies;
 
-import env.Attribute;
-import mas.util.CustomCouple;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import org.graphstream.graph.Graph;
 
 public interface IStrategy {
-    String moveTo(HashMap<String, CustomCouple<Date, List<Attribute>>> knowledge);
+    String moveTo(Graph knowledge);
     void setMyAgent(mas.abstractAgent myAgent);
 }
