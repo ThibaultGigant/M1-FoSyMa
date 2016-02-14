@@ -42,12 +42,14 @@ public class RandomWalkBehaviour extends TickerBehaviour{
 			System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lobs);
 
 			//Little pause to allow you to follow what is going on
+			/*
 			try {
 				System.out.println("Press a key to allow the agent "+this.myAgent.getLocalName() +" to execute its next move");
 				System.in.read();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			*/
 
 
 			//list of attribute associated to the currentPosition

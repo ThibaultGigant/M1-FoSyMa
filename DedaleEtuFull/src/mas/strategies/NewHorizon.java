@@ -2,26 +2,17 @@ package mas.strategies;
 
 import env.Attribute;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 import org.graphstream.algorithm.AStar;
-import org.graphstream.algorithm.AStar.Costs;
-import org.graphstream.algorithm.Dijkstra;
-import org.graphstream.algorithm.networksimplex.NetworkSimplex;
-import org.graphstream.graph.BreadthFirstIterator;
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 
 import env.Environment;
 import mas.abstractAgent;
-import mas.agents.ExploAgent;
-import mas.util.CustomCouple;
-import scala.util.parsing.combinator.testing.Str;
+import mas.agents.AgentExplorateur;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
@@ -33,15 +24,14 @@ public class NewHorizon implements IStrategy {
     private mas.abstractAgent myAgent;
 
     public String moveTo(Graph knowledge) {
-        List<Attribute> li;
-        String room = ""; // The next room the agent will visite
+        String room = ""; // The next room the agent will visit
         int distance = 0;    // Best distance between current position and a room not visited yet
         int currentDistance; // Template
         for  ( Node roomKey : knowledge.getNodeSet() ) {
             // Get the distance between current place and the room described in li
             // Only if the room isn't visited yet
             // Keep the nearest
-        	if ((int) roomKey.getAttribute("visited") == 1)
+        	if (roomKey.getAttribute("visited"))
         		continue;
         	
             currentDistance = distanceToRoom(roomKey.getId());
@@ -72,7 +62,7 @@ public class NewHorizon implements IStrategy {
     private int distanceToRoom(String room) {
         String currentPosition = (this.myAgent.getCurrentPosition());
         
-        AStar astar = new AStar( ((ExploAgent)(this.myAgent)).getKnowledge());
+        AStar astar = new AStar( ((AgentExplorateur)(this.myAgent)).getKnowledge().getGraph());
         astar.compute(currentPosition, room);
 
         Path path = astar.getShortestPath();

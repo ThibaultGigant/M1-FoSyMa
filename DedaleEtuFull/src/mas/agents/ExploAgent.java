@@ -31,7 +31,6 @@ public class ExploAgent extends abstractAgent {
 	//private HashMap<String, CustomCouple<Date, List<Attribute>>> knowledge = new HashMap<String, CustomCouple<Date,List<Attribute>>>();
 	private Graph knowledge = new SingleGraph("knowledge");
 	private IProtocol protocol;
-	// private IStrategy strategy;
 	
 
 	/**
@@ -106,11 +105,11 @@ public class ExploAgent extends abstractAgent {
 			if (currentNode == null) {
 				knowledge.addNode(id);
 				for (String attr : node.getAttributeKeySet()) {
-					knowledge.getNode(id).setAttribute(attr, node.getAttribute(attr));
+					knowledge.getNode(id).setAttribute(attr, (Object) node.getAttribute(attr));
 				}
 				flag = true;
 			}
-			else if (((Date) node.getAttribute("date")).compareTo((Date) currentNode.getAttribute("date")) <= 0) {
+			else if (((Date) node.getAttribute("date")).compareTo(currentNode.getAttribute("date")) <= 0) {
 				continue;
 			}
 			else if ((int) node.getAttribute("visited") > (int) currentNode.getAttribute("visited") ) {
