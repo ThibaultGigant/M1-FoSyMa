@@ -2,14 +2,12 @@ package mas.agents;
 
 import env.Attribute;
 import env.Environment;
-import jade.core.behaviours.Behaviour;
 import mas.abstractAgent;
 import mas.protocols.IProtocol;
 import mas.util.Knowledge;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.ui.view.Viewer;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -66,6 +64,22 @@ public class AgentExplorateur extends abstractAgent {
 
         super.setup();
 
+        this.setupArguments();
+
+        // Adding a knowledge
+        this.knowledge = new Knowledge(this, new SingleGraph("knowledge"));
+
+        //Add the behaviours
+        this.protocol.addBehaviours(this);
+
+        System.out.println("the agent "+this.getLocalName()+ " is started");
+        this.displayKnowledge();
+    }
+
+    /**
+     * Récupère les arguments et initialise l'agent avec ces données
+     */
+    private void setupArguments() {
         //get the parameters given into the object[]. In the current case, the environment where the agent will evolve
         final Object[] args = getArguments();
         if(args[0]!=null){
@@ -75,25 +89,6 @@ public class AgentExplorateur extends abstractAgent {
             System.err.println("Malfunction during parameter's loading of agent"+ this.getClass().getName());
             System.exit(-1);
         }
-
-        // Adding a knowledge
-        this.knowledge = new Knowledge(this, new SingleGraph("knowledge"));
-
-        //Add the behaviours
-        this.protocol.addBehaviours(this);
-
-        System.out.println("the agent "+this.getLocalName()+ " is started");
-
-        String defaultNodeStyle= "node {"+"fill-color: black;"+" size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
-        String nodeStyle_agent= "node.agent {"+"fill-color: blue;"+"}";
-        String nodeStyle_visited= "node.visited {"+"fill-color: black;"+"}";
-        String nodeStyle_unvisited= "node.unvisited {"+"fill-color: red;"+"}";
-
-        String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_visited+nodeStyle_unvisited;
-        System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
-
-        this.getKnowledge().getGraph().setAttribute("ui.stylesheet",nodeStyle);
-        Viewer viewer = this.getKnowledge().getGraph().display();
     }
 
     /**
@@ -102,6 +97,33 @@ public class AgentExplorateur extends abstractAgent {
      */
     public void updateKnowledge(List<Environment.Couple<String, List<Attribute>>> lobs) {
         this.knowledge.updateKnowledge(lobs);
+    }
+
+    /**
+     * Mise à jour de la connaissance d'un agent depuis la connaissance d'un autre agent
+     * @param newKnowledge Serializable contenant toutes les données du graphe des connaissances de l'agent qui les partage
+     */
+    public void updateKnowledge(HashMap<String, HashMap<String, HashMap<String, Object>>> newKnowledge) {
+        this.knowledge.updateKnowledge(newKnowledge);
+    }
+
+    /**
+     * Provoque l'affichage du graphe des connaissances de l'agent
+     */
+    public void displayKnowledge() {
+        // Création du style des noeuds
+        String defaultNodeStyle= "node {"+"fill-color: black;"+" size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
+        String nodeStyle_agent= "node.agent {"+"fill-color: red;"+"}";
+        String nodeStyle_visited= "node.visited {"+"fill-color: #347C2C;"+"}";
+        String nodeStyle_unvisited= "node.unvisited {"+"fill-color: black;"+"}";
+
+        String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_visited+nodeStyle_unvisited;
+        System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
+
+        this.getKnowledge().getGraph().setAttribute("ui.stylesheet",nodeStyle);
+
+        // Ouverture de la fenêtre
+        this.getKnowledge().getGraph().display();
     }
 
 

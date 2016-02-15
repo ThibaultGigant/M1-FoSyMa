@@ -45,7 +45,6 @@ public class Knowledge implements Serializable {
 
     /**
      * Constructeur, à initialiser avec un graphe déjà instancié.
-     * Celui-ci devrait être constitué uniquement du noeud où est placé l'agent
      * @param myAgent agent dont cette classe représente les connaissances
      * @param graph graphe des connaissances initiales de l'agent
      */
@@ -55,6 +54,7 @@ public class Knowledge implements Serializable {
         this.currentPosition = this.graph.addNode(this.myAgent.getCurrentPosition());
         this.currentPosition.setAttribute("visited", true);
         this.currentPosition.setAttribute("ui.class", "agent");
+        this.currentPosition.setAttribute("date", new Date());
     }
 
     /**
@@ -74,39 +74,44 @@ public class Knowledge implements Serializable {
 
     /**
      * Permet la mise à jour de la connaissance d'un agent avec celle d'un autre
-     * @param agent Agent qui fournit le graphe. Utile pour mettre à jour la hashmap des communications
-     * @param newGraph graphe
+     * @param newKnowledge Connaissances partagée par un autre agent
      */
-    public void updateKnowledge(abstractAgent agent, Graph newGraph) {
-        /*
-        Mise à jour de la date de dernière communication entre les agents
-         */
-        Date date = new Date();
-        this.lastCommunication.put(agent.getLocalName(), date);
+    public void updateKnowledge(HashMap<String, HashMap<String, HashMap<String, Object>>> newKnowledge) {
 
         /*
          * Pour chaque noeud du nouveau graphe, s'il n'est pas dans les connaissances, l'ajouter
          * Sinon regarder si la date dans le nouveau graphe est plus récente, si c'est le cas, mettre à jour
          */
-        for (Node node: newGraph.getNodeSet()) {
-            Node n = this.getGraph().getNode(node.getId());
-
+        for (String nodeID: newKnowledge.get("nodes").keySet()) {
+            Node n = this.getGraph().getNode(nodeID);
             if (n != null) {
-                if (((Date) n.getAttribute("date")).compareTo(node.getAttribute("date")) < 0) {
-                    for (String key: node.getAttributeKeySet()) {
-                        n.addAttribute(key, n.getAttribute(key));
+                Date oldDate = (Date) n.getAttribute("date");
+                Date newDate = (Date) newKnowledge.get("nodes").get(nodeID).get("date");
+                if (oldDate.compareTo(newDate) < 0) {
+                    for (String key: newKnowledge.get("nodes").get(nodeID).keySet()) {
+                        n.addAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
+                    }
+                    if (n.getAttribute("ui.class").equals("agent")) {
+                        n.setAttribute("ui.class", "visited");
                     }
                 }
             } else {
-                this.getGraph().addNode(node.getId());
-            }
-            // Ajout des arêtes liées à ce noeud
-            for (Edge edge: node.getEdgeSet()) {
-                try {
-                    n.getEdgeSet().add(edge);
-                } catch (Exception e) {
-                    continue;
+                n = this.getGraph().addNode(nodeID);
+                for (String key: newKnowledge.get("nodes").get(nodeID).keySet()) {
+                    n.addAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
                 }
+                if (n.getAttribute("ui.class").equals("agent")) {
+                    n.setAttribute("ui.class", "visited");
+                }
+            }
+        }
+
+        // Ajout des arêtes si elles n'y sont pas déjà
+        for (String edgeID: newKnowledge.get("edges").keySet()) {
+            try {
+                this.getGraph().addEdge(edgeID, (String) newKnowledge.get("edges").get(edgeID).get("node0"), (String) newKnowledge.get("edges").get(edgeID).get("node1"));
+            } catch (Exception e) {
+                continue;
             }
         }
     }
@@ -132,7 +137,7 @@ public class Knowledge implements Serializable {
                 // Ajout de l'arête si besoin
                 if (!n.getId().equals(currentNode)) {
                     try {
-                        this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId());
+                        this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
                     } catch (Exception e) {
                         continue;
                     }
@@ -146,7 +151,7 @@ public class Knowledge implements Serializable {
                     n.addAttribute("visited", false);
                     n.setAttribute("ui.class", "unvisited");
                     try {
-                        this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId());
+                        this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
                     } catch (Exception e) {
                         continue;
                     }
@@ -165,5 +170,73 @@ public class Knowledge implements Serializable {
         this.currentPosition = this.graph.getNode(this.myAgent.getCurrentPosition());
         this.currentPosition.setAttribute("visited", true);
         this.currentPosition.setAttribute("ui.class", "agent");
+    }
+
+    /**
+     * Crée une instance de Knowledge à partager avec l'agent passé en paramètre
+     */
+    public HashMap<String, HashMap<String, HashMap<String, Object>>> shareKnowledge(String agentID) {
+        Date date = new Date();
+        HashMap<String, HashMap<String, HashMap<String, Object>>> toShare = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
+        HashMap<String, HashMap<String, Object>> noeuds = new HashMap<String, HashMap<String, Object>>();
+        HashMap<String, HashMap<String, Object>> aretes = new HashMap<String, HashMap<String, Object>>();
+        HashMap<String, Object> attributes;
+
+        // Si l'agent n'a pas encore été rencontré, on peut tout lui envoyer après mise à jour de la date de dernière communication
+        if (!this.lastCommunication.containsKey(agentID)) {
+            this.lastCommunication.put(agentID, date);
+
+            // Ajout des noeuds avec leurs attributs
+            for (Node n: this.getGraph().getNodeSet()) {
+                attributes = new HashMap<String, Object>();
+                for (String attribute: n.getAttributeKeySet()) {
+                    attributes.put(attribute, n.getAttribute(attribute));
+                }
+                noeuds.put(n.getId(), attributes);
+            }
+
+            // Ajout des arêtes avec leurs attributs
+            for (Edge edge: this.getGraph().getEdgeSet()) {
+                attributes = new HashMap<String, Object>();
+                for (String attribute: edge.getAttributeKeySet()) {
+                    attributes.put(attribute, edge.getAttribute(attribute));
+                }
+                attributes.put("node0", edge.getNode0().getId());
+                attributes.put("node1", edge.getNode1().getId());
+                aretes.put(edge.getId(), attributes);
+            }
+        }
+        else {
+            this.lastCommunication.put(agentID, date);
+
+            // Ajout des noeuds avec leurs attributs
+            for (Node n: this.getGraph().getNodeSet()) {
+                if (((Date) n.getAttribute("date")).compareTo(this.lastCommunication.get(agentID)) > 0) {
+                    attributes = new HashMap<String, Object>();
+                    for (String attribute : n.getAttributeKeySet()) {
+                        attributes.put(attribute, n.getAttribute(attribute));
+                    }
+                    noeuds.put(n.getId(), attributes);
+                }
+            }
+
+            // Ajout des arêtes avec leurs attributs
+            for (Edge edge: this.getGraph().getEdgeSet()) {
+                if (((Date) edge.getAttribute("date")).compareTo(this.lastCommunication.get(agentID)) > 0) {
+                    attributes = new HashMap<String, Object>();
+                    for (String attribute : edge.getAttributeKeySet()) {
+                        attributes.put(attribute, edge.getAttribute(attribute));
+                    }
+                    attributes.put("node0", edge.getNode0().getId());
+                    attributes.put("node1", edge.getNode1().getId());
+                    aretes.put(edge.getId(), attributes);
+                }
+            }
+        }
+        if (noeuds.isEmpty())
+            return null;
+        toShare.put("nodes", noeuds);
+        toShare.put("edges", aretes);
+        return toShare;
     }
 }

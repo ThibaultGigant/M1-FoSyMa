@@ -1,22 +1,15 @@
 package mas.agents;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Date;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.ui.view.Viewer;
 
-import env.Attribute;
 import env.Environment;
 import mas.abstractAgent;
-import mas.behaviours.ObserveBehaviour;
 import mas.protocols.IProtocol;
-import mas.strategies.IStrategy;
-import mas.util.CustomCouple;
 
 public class ExploAgent extends abstractAgent {
 
@@ -28,7 +21,6 @@ public class ExploAgent extends abstractAgent {
 	/**
 	 * Liste des connaissances pertinentes que l'agent a sur le monde
 	 */
-	//private HashMap<String, CustomCouple<Date, List<Attribute>>> knowledge = new HashMap<String, CustomCouple<Date,List<Attribute>>>();
 	private Graph knowledge = new SingleGraph("knowledge");
 	private IProtocol protocol;
 	
@@ -58,9 +50,7 @@ public class ExploAgent extends abstractAgent {
 		}
 		
 		//Add the behaviours
-		//TODO
 		this.protocol.addBehaviours(this);
-		//addBehaviour(new ObserveBehaviour(this, 1000));
 
 		System.out.println("the agent "+this.getLocalName()+ " is started");
 
@@ -74,7 +64,7 @@ public class ExploAgent extends abstractAgent {
 		System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
 		this.getKnowledge().setAttribute("ui.stylesheet",nodeStyle);
-		Viewer viewer = this.getKnowledge().display();
+		this.getKnowledge().display();
 	}
 
 	/**
@@ -89,11 +79,6 @@ public class ExploAgent extends abstractAgent {
 	 * @param newKnowledge the knowledge of the other agent used to update the one of this agent
 	 */
 	public boolean updateKnowledge(Graph newKnowledge) {
-		/*for (String pos: newKnowledge.keySet()) {
-			if ((knowledge.containsKey(pos) && knowledge.get(pos).getLeft().compareTo(newKnowledge.get(pos).getLeft()) < 0) || !knowledge.containsKey(pos)) {
-				knowledge.put(pos, newKnowledge.get(pos));
-			}
-		}*/
 		String id;
 		Node currentNode;
 		
@@ -145,20 +130,6 @@ public class ExploAgent extends abstractAgent {
 	public void setProtocol(IProtocol protocol) {
 		this.protocol = protocol;
 	}
-
-	/**
-	 * @return the strategy
-	 */
-	/*public IStrategy getStrategy() {
-		return strategy;
-	}*/
-
-	/**
-	 * @param strategy the strategy to set
-	 */
-	/*public void setStrategy(IStrategy strategy) {
-		this.strategy = strategy;
-	}*/
 
 	/**
 	 * This method is automatically called after doDelete()

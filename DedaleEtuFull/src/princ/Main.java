@@ -170,7 +170,6 @@ public class Main {
 	/**
 	 *  Creates the agents and add them to the agentList.  agents are NOT started.
 	 *@param containerList :Name and container's ref
-	 *@param sniff : a ref to the sniffeur agent
 	 *@return the agentList
 	 */
 	private static List<AgentController> createAgents(HashMap<String, ContainerController> containerList) {
@@ -236,6 +235,24 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+
+		/*
+		//Agent0 on container0
+		c = containerList.get("container0");
+		agentName="Explo2";
+		try {
+
+			Object[] objtab=new Object[]{env, new ExplorationProtocol()};//used to give informations to the agent
+			AgentController	ag=c.createNewAgent(agentName,AgentExplorateur.class.getName(),objtab);
+			agentList.add(ag);
+			System.out.println(agentName+" launched");
+		} catch (StaleProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+
 
 //		//Agent0 on container0
 //		c = containerList.get("container0");
