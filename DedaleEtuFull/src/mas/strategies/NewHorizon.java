@@ -5,12 +5,12 @@ import env.Attribute;
 import java.util.List;
 import java.util.Random;
 
+import env.Couple;
 import org.graphstream.algorithm.AStar;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 
-import env.Environment;
 import mas.abstractAgent;
 import mas.agents.AgentExplorateur;
 import static java.lang.Math.pow;
@@ -43,7 +43,7 @@ public class NewHorizon implements IStrategy {
 
         // If there is no known room unvisited yet, choose randomly
         if (room.equals("")) {
-            List<Environment.Couple<String, List<Attribute>>> lobs = this.myAgent.observe();
+            List<Couple<String, List<Attribute>>> lobs = this.myAgent.observe();
             //Random move from the current position
             Random r= new Random();
             int moveId=r.nextInt(lobs.size());
@@ -86,12 +86,12 @@ public class NewHorizon implements IStrategy {
     private String getNextRoom(String room) {
         double distance;
 
-        List<Environment.Couple<String, List<Attribute>>> lobs = this.myAgent.observe();
+        List<Couple<String, List<Attribute>>> lobs = this.myAgent.observe();
         String[] roomPosition = room.split("_");
 
         double distanceMin = distanceToRoom(lobs.get(0).getLeft(), room);
         String destinationRoom = lobs.get(0).getLeft();
-        for (Environment.Couple<String, List<Attribute>> c: lobs) {
+        for (Couple<String, List<Attribute>> c: lobs) {
             distance = distanceToRoom(c.getLeft(), room);
             if (distance < distanceMin) {
                 destinationRoom = c.getLeft();

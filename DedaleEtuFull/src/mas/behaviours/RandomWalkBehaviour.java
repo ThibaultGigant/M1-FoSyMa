@@ -6,7 +6,7 @@ import java.util.Random;
 
 import env.Attribute;
 
-import env.Environment.Couple;
+import env.Couple;
 
 import jade.core.behaviours.TickerBehaviour;
 

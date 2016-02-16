@@ -1,7 +1,7 @@
 package mas.util;
 
 import env.Attribute;
-import env.Environment;
+import env.Couple;
 import jade.util.leap.Serializable;
 import mas.abstractAgent;
 import org.graphstream.graph.Edge;
@@ -120,7 +120,7 @@ public class Knowledge implements Serializable {
      * Permet la mise à jour de la connaissance d'un agent depuis une observation
      * @param lobs liste d'observations
      */
-    public void updateKnowledge(List<Environment.Couple<String, List<Attribute>>> lobs) {
+    public void updateKnowledge(List<Couple<String, List<Attribute>>> lobs) {
         Date date = new Date();
         String currentNode = this.myAgent.getCurrentPosition();
         Node n;
@@ -129,7 +129,7 @@ public class Knowledge implements Serializable {
          * Pour chaque noeud de la liste donée, s'il n'est pas dans les connaissances, l'ajouter
          * Sinon mettre à jour ses données avec ce qu'on a observé
          */
-        for (Environment.Couple<String, List<Attribute>> couple: lobs) {
+        for (Couple<String, List<Attribute>> couple: lobs) {
             n = this.getGraph().getNode(couple.getLeft());
 
             if (n != null) {
@@ -207,7 +207,7 @@ public class Knowledge implements Serializable {
             }
         }
         else {
-            this.lastCommunication.put(agentID, date);
+            //this.lastCommunication.put(agentID, date);
 
             // Ajout des noeuds avec leurs attributs
             for (Node n: this.getGraph().getNodeSet()) {

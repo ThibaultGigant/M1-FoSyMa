@@ -1,20 +1,15 @@
 package mas.behaviours;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Date;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
-import FIPA.DateTime;
 import mas.agents.ExploAgent;
-import mas.util.CustomCouple;
 import env.Attribute;
-import env.Environment.Couple;
+import env.Couple;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 

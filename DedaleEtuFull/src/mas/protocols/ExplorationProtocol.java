@@ -4,7 +4,6 @@ import mas.abstractAgent;
 import mas.behaviours.*;
 import mas.strategies.ExploreStrategy;
 import mas.strategies.IStrategy;
-import mas.strategies.NewHorizon;
 
 /**
  * Protocole d'exploration
@@ -18,7 +17,7 @@ public class ExplorationProtocol extends AbstractProtocol {
 
         IStrategy strategy = new ExploreStrategy();
         strategy.setMyAgent(myAgent);
-        behaviours.add(new MoveBehaviour(myAgent, 100, strategy));
+        behaviours.add(new MoveBehaviour(myAgent, 500, strategy));
 
 //        behaviours.add(new SendMessageBehaviour(myAgent, 1000));
 //        behaviours.add(new ReceiveBehaviour(myAgent));

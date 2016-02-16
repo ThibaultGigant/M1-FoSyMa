@@ -11,8 +11,6 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 import mas.agents.AgentExplorateur;
-import mas.agents.DummyExploAgent;
-import mas.protocols.ExploProtocol;
 import mas.protocols.ExplorationProtocol;
 
 import java.util.ArrayList;
@@ -236,8 +234,8 @@ public class Main {
 			e.printStackTrace();
 		}
 
+/*
 
-		/*
 		//Agent0 on container0
 		c = containerList.get("container0");
 		agentName="Explo2";
@@ -251,7 +249,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+*/
 
 
 //		//Agent0 on container0

@@ -1,7 +1,7 @@
 package mas.behaviours;
 
 import env.Attribute;
-import env.Environment.Couple;
+import env.Couple;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import mas.agents.AgentExplorateur;

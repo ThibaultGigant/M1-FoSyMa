@@ -1,6 +1,7 @@
 package mas.agents;
 
 import env.Attribute;
+import env.Couple;
 import env.Environment;
 import mas.abstractAgent;
 import mas.protocols.IProtocol;
@@ -95,7 +96,7 @@ public class AgentExplorateur extends abstractAgent {
      * Mise à jour de la connaissance d'un agent depuis une observation
      * @param lobs liste d'observations
      */
-    public void updateKnowledge(List<Environment.Couple<String, List<Attribute>>> lobs) {
+    public void updateKnowledge(List<Couple<String, List<Attribute>>> lobs) {
         this.knowledge.updateKnowledge(lobs);
     }
 

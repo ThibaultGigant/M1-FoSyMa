@@ -2,8 +2,6 @@ package mas.protocols;
 
 import jade.core.behaviours.Behaviour;
 import mas.abstractAgent;
-import mas.behaviours.ObservationBehaviour;
-import mas.behaviours.RandomWalkBehaviour;
 
 import java.util.ArrayList;
 
