@@ -234,7 +234,6 @@ public class Main {
 			e.printStackTrace();
 		}
 
-/*
 
 		//Agent0 on container0
 		c = containerList.get("container0");
@@ -249,7 +248,6 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-*/
 
 
 //		//Agent0 on container0

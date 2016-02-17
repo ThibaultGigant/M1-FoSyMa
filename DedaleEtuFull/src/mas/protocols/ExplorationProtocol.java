@@ -17,10 +17,10 @@ public class ExplorationProtocol extends AbstractProtocol {
 
         IStrategy strategy = new ExploreStrategy();
         strategy.setMyAgent(myAgent);
-        behaviours.add(new MoveBehaviour(myAgent, 500, strategy));
+        behaviours.add(new MoveBehaviour(myAgent, 100, strategy));
 
-//        behaviours.add(new SendMessageBehaviour(myAgent, 1000));
-//        behaviours.add(new ReceiveBehaviour(myAgent));
+        behaviours.add(new SendMessageBehaviour(myAgent, 1000));
+        behaviours.add(new ReceiveBehaviour(myAgent));
 
         behaviours.forEach(myAgent::addBehaviour);
     }

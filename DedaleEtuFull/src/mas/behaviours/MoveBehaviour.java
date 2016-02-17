@@ -1,10 +1,15 @@
 package mas.behaviours;
 
+import env.Attribute;
+import env.Couple;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import mas.agents.AgentExplorateur;
 import mas.protocols.RandomObserveProtocol;
 import mas.strategies.IStrategy;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Behaviour correspondant au déplacement de l'agent
@@ -27,7 +32,16 @@ public class MoveBehaviour extends TickerBehaviour {
         if (destination.isEmpty()) {
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
         } else {
-            ((AgentExplorateur) this.myAgent).moveTo(destination);
+            while (!((AgentExplorateur) this.myAgent).moveTo(destination))
+            {
+                List<Couple<String,List<Attribute>>> lobs=((mas.abstractAgent)this.myAgent).observe();//myPosition
+
+
+                //Random move from the current position
+                Random r= new Random();
+                int moveId=r.nextInt(lobs.size());
+                destination = lobs.get(moveId).getLeft();
+            }
         }
     }
 }

@@ -1,11 +1,13 @@
 package mas.behaviours;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import mas.agents.AgentExplorateur;
 
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -22,6 +24,9 @@ public class ReceiveBehaviour extends SimpleBehaviour {
         final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 
         final ACLMessage msg = this.myAgent.receive(msgTemplate);
+        ACLMessage accuseReception = new ACLMessage(ACLMessage.CONFIRM);
+//        accuseReception.addReceiver(msg.getSender());
+        accuseReception.setSender(new AID(this.myAgent.getLocalName(), AID.ISLOCALNAME));
         HashMap<String, HashMap<String, HashMap<String, Object>>> message;
 
         if (msg != null) {
@@ -33,8 +38,11 @@ public class ReceiveBehaviour extends SimpleBehaviour {
             }
             try {
                 message = (HashMap<String, HashMap<String, HashMap<String, Object>>>) msg.getContentObject();
-                if (message != null)
+                if (message != null) {
+                    accuseReception.setContentObject((Date) message.get("date").get("date").get("date"));
+                    ((AgentExplorateur) this.myAgent).sendMessage(accuseReception);
                     ((AgentExplorateur) this.myAgent).updateKnowledge(message);
+                }
             }
             catch (Exception e) {
                 e.printStackTrace();

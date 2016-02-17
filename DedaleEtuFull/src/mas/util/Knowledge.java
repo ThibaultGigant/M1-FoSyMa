@@ -237,6 +237,11 @@ public class Knowledge implements Serializable {
             return null;
         toShare.put("nodes", noeuds);
         toShare.put("edges", aretes);
+        HashMap<String, HashMap<String, Object>> dateHashHash = new HashMap<>();
+        HashMap<String, Object> dateHash = new HashMap<>();
+        dateHash.put("date", date);
+        dateHashHash.put("date", dateHash);
+        toShare.put("date", dateHashHash);
         return toShare;
     }
 }
