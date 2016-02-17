@@ -31,7 +31,7 @@ public class NewHorizon implements IStrategy {
             // Get the distance between current place and the room described in li
             // Only if the room isn't visited yet
             // Keep the nearest
-        	if (roomKey.getAttribute("visited"))
+        	if ((boolean) roomKey.getAttribute("visited"))
         		continue;
         	
             currentDistance = distanceToRoom(roomKey.getId());
