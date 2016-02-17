@@ -4,6 +4,7 @@ import env.Attribute;
 import env.Couple;
 import jade.util.leap.Serializable;
 import mas.abstractAgent;
+import mas.agents.AgentExplorateur;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -184,7 +185,6 @@ public class Knowledge implements Serializable {
 
         // Si l'agent n'a pas encore été rencontré, on peut tout lui envoyer après mise à jour de la date de dernière communication
         if (!this.lastCommunication.containsKey(agentID)) {
-            this.lastCommunication.put(agentID, date);
 
             // Ajout des noeuds avec leurs attributs
             for (Node n: this.getGraph().getNodeSet()) {
@@ -207,7 +207,6 @@ public class Knowledge implements Serializable {
             }
         }
         else {
-            //this.lastCommunication.put(agentID, date);
 
             // Ajout des noeuds avec leurs attributs
             for (Node n: this.getGraph().getNodeSet()) {
@@ -243,5 +242,15 @@ public class Knowledge implements Serializable {
         dateHashHash.put("date", dateHash);
         toShare.put("date", dateHashHash);
         return toShare;
+    }
+
+    /**
+     * Met à jour la date de dernière communication avec un agent
+     * @param agentID ID de l'agent avec qui on a communiqué
+     * @param date date de communication
+     */
+    public void updateLastCommunication(String agentID, Date date) {
+        System.out.println("Mise à jour dernière com de " + this.myAgent.getLocalName() + " avec " + agentID + "pour la date " + date);
+        this.lastCommunication.put(agentID, date);
     }
 }

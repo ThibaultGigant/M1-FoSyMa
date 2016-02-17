@@ -1,4 +1,4 @@
-package mas.behaviours;
+package mas.behaviours.move;
 
 import env.Attribute;
 import env.Couple;

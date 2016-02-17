@@ -1,4 +1,4 @@
-package mas.behaviours;
+package mas.behaviours.move;
 
 import java.util.Date;
 import java.util.List;

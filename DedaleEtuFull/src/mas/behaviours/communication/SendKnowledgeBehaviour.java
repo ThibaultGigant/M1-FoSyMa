@@ -1,4 +1,4 @@
-package mas.behaviours;
+package mas.behaviours.communication;
 
 import jade.core.AID;
 import jade.core.Agent;
@@ -8,14 +8,14 @@ import mas.agents.AgentExplorateur;
 
 import java.io.IOException;
 
-public class SendMessageBehaviour extends TickerBehaviour{
+public class SendKnowledgeBehaviour extends TickerBehaviour{
 
 	/**
 	 * An agent tries to contact its friend and to give him its current position
 	 * @param myagent the agent who posses the behaviour
 	 *
 	 */
-	public SendMessageBehaviour(final Agent myagent, long period) {
+	public SendKnowledgeBehaviour(final Agent myagent, long period) {
 		super(myagent, period);
 	}
 
@@ -27,8 +27,6 @@ public class SendMessageBehaviour extends TickerBehaviour{
 		msg.setSender(this.myAgent.getAID());
 
 		if (myPosition!=""){
-			System.out.println("Agent "+this.myAgent.getLocalName()+ " is trying to reach its friends");
-			//msg.setContent("Hello World, I'm at "+myPosition);
 			if (!myAgent.getLocalName().equals("Explo1")){
 				msg.addReceiver(new AID("Explo1",AID.ISLOCALNAME));
 			}else{

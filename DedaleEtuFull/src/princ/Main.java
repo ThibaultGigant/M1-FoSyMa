@@ -30,7 +30,7 @@ public class Main {
 	public static void main(String[] args){
 
 		//0) Create the real environment and the observed one
-		env= new Environment(ENVtype.GRID,15,null);
+		env= new Environment(ENVtype.GRID_T,10,null);
 		//env= new Environment(ENVtype.DOROGOVTSEV,15,null);
 
 		

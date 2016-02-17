@@ -1,7 +1,7 @@
 package mas.protocols;
 
-import mas.behaviours.ObservationBehaviour;
-import mas.behaviours.WalkThroughTheAir;
+import mas.behaviours.move.ObservationBehaviour;
+import mas.behaviours.move.WalkThroughTheAir;
 import mas.strategies.IStrategy;
 import mas.strategies.NewHorizon;
 

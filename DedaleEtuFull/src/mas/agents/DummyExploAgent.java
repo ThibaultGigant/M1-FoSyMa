@@ -4,7 +4,8 @@ package mas.agents;
 import env.Environment;
 
 import mas.abstractAgent;
-import mas.behaviours.*;
+import mas.behaviours.communication.SayHello;
+import mas.behaviours.move.RandomWalkBehaviour;
 
 
 public class DummyExploAgent extends abstractAgent{

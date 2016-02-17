@@ -8,6 +8,7 @@ import mas.protocols.IProtocol;
 import mas.util.Knowledge;
 import org.graphstream.graph.implementations.SingleGraph;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -125,6 +126,10 @@ public class AgentExplorateur extends abstractAgent {
 
         // Ouverture de la fenêtre
         this.getKnowledge().getGraph().display();
+    }
+
+    public void updateLastCommunication(String agentID, Date date) {
+        this.getKnowledge().updateLastCommunication(agentID, date);
     }
 
 

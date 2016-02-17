@@ -1,4 +1,4 @@
-package mas.behaviours;
+package mas.behaviours.move;
 
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;

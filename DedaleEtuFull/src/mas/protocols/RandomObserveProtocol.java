@@ -1,7 +1,7 @@
 package mas.protocols;
 
-import mas.behaviours.ObservationBehaviour;
-import mas.behaviours.RandomWalkBehaviour;
+import mas.behaviours.move.ObservationBehaviour;
+import mas.behaviours.move.RandomWalkBehaviour;
 
 /**
  * Created by Tigig on 14/02/2016.
