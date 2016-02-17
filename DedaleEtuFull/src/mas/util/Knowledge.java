@@ -88,7 +88,7 @@ public class Knowledge implements Serializable {
             if (n != null) {
                 Date oldDate = (Date) n.getAttribute("date");
                 Date newDate = (Date) newKnowledge.get("nodes").get(nodeID).get("date");
-                if (oldDate.compareTo(newDate) < 0) {
+                if (oldDate.compareTo(newDate) < 0 && !(!n.getAttribute("ui.class").equals("unvisited") && newKnowledge.get("nodes").get(nodeID).get("ui.class").equals("unvisited"))) {
                     for (String key: newKnowledge.get("nodes").get(nodeID).keySet()) {
                         n.addAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
                     }
@@ -125,6 +125,7 @@ public class Knowledge implements Serializable {
         Date date = new Date();
         String currentNode = this.myAgent.getCurrentPosition();
         Node n;
+        List<Attribute> attr, attr2;
 
         /*
          * Pour chaque noeud de la liste donée, s'il n'est pas dans les connaissances, l'ajouter
@@ -132,9 +133,41 @@ public class Knowledge implements Serializable {
          */
         for (Couple<String, List<Attribute>> couple: lobs) {
             n = this.getGraph().getNode(couple.getLeft());
+        	attr = couple.getRight();
+        	if (!attr.isEmpty())
+        		System.out.println(attr.toString());
 
             if (n != null) {
+            	
+            	// Ne pas mettre a jour si l'observation voit le trésor alors que l'on a su à un moment
+            	// au moins le montant exacte
+            	try {
+            		if (couple.getRight().contains(Attribute.TREASURE)) {
+            			for ( Attribute a : couple.getRight() ) {
+            				if (a.equals(Attribute.TREASURE)) {
+                    			for ( Attribute a2 : (List<Attribute>)n.getAttribute("contenu") ) {
+                    				if (a2.equals(Attribute.TREASURE) && (int)a.getValue() != 0/* && (int) a.getValue() > (int)a2.getValue()*/)
+                    					continue;
+                    			}
+            				}
+            			}
+            				
+            		}
+            	}
+            	catch (Exception e) {
+            		System.out.println("");
+            	}
+            	
                 n.addAttribute("contenu", couple.getRight());
+                if (attr.contains(Attribute.TREASURE)) {
+                	n.setAttribute("ui.class", "treasure");
+                	n.setAttribute("real.class", "treasure");
+                }
+                else if (attr.contains(Attribute.HOWL)) {
+                	n.setAttribute("ui.class", "wumpus");
+                	n.setAttribute("real.class", "wumpus");
+                }
+                
                 // Ajout de l'arête si besoin
                 if (!n.getId().equals(currentNode)) {
                     try {
@@ -150,7 +183,20 @@ public class Knowledge implements Serializable {
                 // Ajout des arêtes et changement des statuts
                 if (!n.getId().equals(currentNode)) {
                     n.addAttribute("visited", false);
-                    n.setAttribute("ui.class", "unvisited");
+                    
+                    if (attr.contains(Attribute.TREASURE)) {
+                    	n.setAttribute("ui.class", "treasure");
+                    	n.setAttribute("real.class", "treasure");
+                    }
+                    else if (attr.contains(Attribute.HOWL)) {
+                    	n.setAttribute("ui.class", "wumpus");
+                		n.setAttribute("real.class", "wumpus");
+                    }
+                    else {
+                    	n.setAttribute("ui.class", "unvisited");
+                    	n.setAttribute("real.class", "unvisited");
+                    }
+                    
                     try {
                         this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
                     } catch (Exception e) {
@@ -167,10 +213,19 @@ public class Knowledge implements Serializable {
      * Change les données sur la position actuelle de l'agent, principalement pour l'affichage du graphe
      */
     public void updateCurrentPosition() {
-        this.currentPosition.setAttribute("ui.class", "visited");
+    	
+    	this.currentPosition.setAttribute("ui.class", this.currentPosition.getAttribute("real.class"));
         this.currentPosition = this.graph.getNode(this.myAgent.getCurrentPosition());
         this.currentPosition.setAttribute("visited", true);
         this.currentPosition.setAttribute("ui.class", "agent");
+        
+        try {
+	        if (this.currentPosition.getAttribute("real.class").equals("unvisited"))
+	        	this.currentPosition.setAttribute("real.class", "visited");
+        }
+        catch (Exception e) {
+        	this.currentPosition.setAttribute("real.class", "visited");
+        }
     }
 
     /**

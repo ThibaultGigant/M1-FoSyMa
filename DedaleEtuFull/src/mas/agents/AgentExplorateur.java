@@ -118,8 +118,10 @@ public class AgentExplorateur extends abstractAgent {
         String nodeStyle_agent= "node.agent {"+"fill-color: red;"+"}";
         String nodeStyle_visited= "node.visited {"+"fill-color: #347C2C;"+"}";
         String nodeStyle_unvisited= "node.unvisited {"+"fill-color: black;"+"}";
+        String nodeStyle_wumpus= "node.wumpus {"+"fill-color: blue;"+"}";
+        String nodeStyle_treasure= "node.treasure {"+"fill-color: yellow;"+"}";
 
-        String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_visited+nodeStyle_unvisited;
+        String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_visited+nodeStyle_unvisited+nodeStyle_treasure+nodeStyle_wumpus;
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
         this.getKnowledge().getGraph().setAttribute("ui.stylesheet",nodeStyle);
