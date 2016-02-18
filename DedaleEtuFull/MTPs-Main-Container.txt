@@ -1,1 +1,1 @@
-http://134.157.244.235:7778/acc
+http://mbp-de-thibault:7778/acc

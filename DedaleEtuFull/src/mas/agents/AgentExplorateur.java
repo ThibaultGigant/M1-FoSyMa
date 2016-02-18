@@ -115,10 +115,10 @@ public class AgentExplorateur extends abstractAgent {
     public void displayKnowledge() {
         // Création du style des noeuds
         String defaultNodeStyle= "node {"+"fill-color: black;"+" size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
-        String nodeStyle_agent= "node.agent {"+"fill-color: red;"+"}";
+        String nodeStyle_agent= "node.agent {"+"fill-color: blue;"+"}";
         String nodeStyle_visited= "node.visited {"+"fill-color: #347C2C;"+"}";
         String nodeStyle_unvisited= "node.unvisited {"+"fill-color: black;"+"}";
-        String nodeStyle_wumpus= "node.wumpus {"+"fill-color: blue;"+"}";
+        String nodeStyle_wumpus= "node.wumpus {"+"fill-color: red;"+"}";
         String nodeStyle_treasure= "node.treasure {"+"fill-color: yellow;"+"}";
 
         String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_visited+nodeStyle_unvisited+nodeStyle_treasure+nodeStyle_wumpus;

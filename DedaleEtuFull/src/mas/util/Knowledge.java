@@ -4,7 +4,6 @@ import env.Attribute;
 import env.Couple;
 import jade.util.leap.Serializable;
 import mas.abstractAgent;
-import mas.agents.AgentExplorateur;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -85,23 +84,40 @@ public class Knowledge implements Serializable {
          */
         for (String nodeID: newKnowledge.get("nodes").keySet()) {
             Node n = this.getGraph().getNode(nodeID);
+            // Si n n'est pas null, alors il y a conflit et on prend le dernier mis à jour, sauf si celui-ci est non-visité
             if (n != null) {
                 Date oldDate = (Date) n.getAttribute("date");
                 Date newDate = (Date) newKnowledge.get("nodes").get(nodeID).get("date");
-                if (oldDate.compareTo(newDate) < 0 && !(!n.getAttribute("ui.class").equals("unvisited") && newKnowledge.get("nodes").get(nodeID).get("ui.class").equals("unvisited"))) {
+                if (oldDate.compareTo(newDate) < 0
+                        && !((boolean) n.getAttribute("visited") && !(boolean) newKnowledge.get("nodes").get(nodeID).get("visited"))) {
                     for (String key: newKnowledge.get("nodes").get(nodeID).keySet()) {
-                        n.addAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
-                    }
-                    if (n.getAttribute("ui.class").equals("agent")) {
-                        n.setAttribute("ui.class", "visited");
+                        n.setAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
                     }
                 }
-            } else {
+            }
+            // Sinon on ajoute le noeud et ses attributs sans réfléchir
+            else {
                 n = this.getGraph().addNode(nodeID);
                 for (String key: newKnowledge.get("nodes").get(nodeID).keySet()) {
                     n.addAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
                 }
-                if (n.getAttribute("ui.class").equals("agent")) {
+            }
+
+            // Si la classe du noeud à l'affichage est "agent", il faut le remplacer par celle du contenu
+            if (n.getAttribute("ui.class").equals("agent")) {
+                if (((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.TREASURE)) {
+                    n.setAttribute("ui.class", "treasure");
+                    n.setAttribute("ui.label", "treasure" + n.getId());
+                }
+                else if (((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.WUMPUS)
+                        || ((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.HOWL)
+                        || ((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.STENCH)) {
+                    n.setAttribute("ui.class", "wumpus");
+                }
+                else if (!((boolean) n.getAttribute("visited"))) {
+                    n.setAttribute("ui.class", "unvisited");
+                }
+                else {
                     n.setAttribute("ui.class", "visited");
                 }
             }
@@ -125,7 +141,7 @@ public class Knowledge implements Serializable {
         Date date = new Date();
         String currentNode = this.myAgent.getCurrentPosition();
         Node n;
-        List<Attribute> attr, attr2;
+        List<Attribute> attr;
 
         /*
          * Pour chaque noeud de la liste donée, s'il n'est pas dans les connaissances, l'ajouter
@@ -133,76 +149,56 @@ public class Knowledge implements Serializable {
          */
         for (Couple<String, List<Attribute>> couple: lobs) {
             n = this.getGraph().getNode(couple.getLeft());
-        	attr = couple.getRight();
-        	if (!attr.isEmpty())
-        		System.out.println(attr.toString());
+            attr = couple.getRight();
 
+            // Si le noeud est déjà connu
             if (n != null) {
-            	
-            	// Ne pas mettre a jour si l'observation voit le trésor alors que l'on a su à un moment
-            	// au moins le montant exacte
-            	try {
-            		if (couple.getRight().contains(Attribute.TREASURE)) {
-            			for ( Attribute a : couple.getRight() ) {
-            				if (a.equals(Attribute.TREASURE)) {
-                    			for ( Attribute a2 : (List<Attribute>)n.getAttribute("contenu") ) {
-                    				if (a2.equals(Attribute.TREASURE) && (int)a.getValue() != 0/* && (int) a.getValue() > (int)a2.getValue()*/)
-                    					continue;
-                    			}
-            				}
-            			}
-            				
-            		}
-            	}
-            	catch (Exception e) {
-            		System.out.println("");
-            	}
-            	
-                n.addAttribute("contenu", couple.getRight());
-                if (attr.contains(Attribute.TREASURE)) {
-                	n.setAttribute("ui.class", "treasure");
-                	n.setAttribute("real.class", "treasure");
-                }
-                else if (attr.contains(Attribute.HOWL)) {
-                	n.setAttribute("ui.class", "wumpus");
-                	n.setAttribute("real.class", "wumpus");
-                }
-                
-                // Ajout de l'arête si besoin
-                if (!n.getId().equals(currentNode)) {
-                    try {
-                        this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
-                    } catch (Exception e) {
+
+                // Ne pas mettre à jour si l'observation voit le trésor alors que l'on a su à un moment
+                // au moins le montant exacte
+                if (!n.getId().equals(this.myAgent.getCurrentPosition())) {
+                    if (((List<Attribute>)n.getAttribute("contenu")).contains(Attribute.TREASURE)
+                            && attr.contains(Attribute.TREASURE)) {
                         continue;
                     }
                 }
-            } else {
+                /* Le problème venait de là, c'est incompréhensible... */
+                else {
+                    // Ajout des attributs associés au noeud
+                    n.setAttribute("contenu", attr);
+                }
+            }
+            // Si le noeud n'a encore jamais été vu
+            else {
                 n = this.getGraph().addNode(couple.getLeft());
                 n.addAttribute("date", date);
                 n.addAttribute("contenu", couple.getRight());
                 // Ajout des arêtes et changement des statuts
                 if (!n.getId().equals(currentNode)) {
                     n.addAttribute("visited", false);
-                    
-                    if (attr.contains(Attribute.TREASURE)) {
-                    	n.setAttribute("ui.class", "treasure");
-                    	n.setAttribute("real.class", "treasure");
-                    }
-                    else if (attr.contains(Attribute.HOWL)) {
-                    	n.setAttribute("ui.class", "wumpus");
-                		n.setAttribute("real.class", "wumpus");
-                    }
-                    else {
-                    	n.setAttribute("ui.class", "unvisited");
-                    	n.setAttribute("real.class", "unvisited");
-                    }
-                    
-                    try {
-                        this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
-                    } catch (Exception e) {
-                        continue;
-                    }
                 }
+            }
+
+            if (!n.getId().equals(currentNode)) {
+
+                // Ajout de l'arête entre le noeud courant et le noeud observé.
+                try {
+                    this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+
+            if (attr.contains(Attribute.TREASURE)) {
+                n.setAttribute("ui.class", "treasure");
+                n.setAttribute("ui.label", "treasure" + n.getId());
+            }
+            else if (attr.contains(Attribute.WUMPUS) || attr.contains(Attribute.HOWL) || attr.contains(Attribute.STENCH)) {
+                n.setAttribute("ui.class", "wumpus");
+                n.setAttribute("visited", true);
+            }
+            else if (!((boolean) n.getAttribute("visited"))) {
+                n.setAttribute("ui.class", "unvisited");
             }
         }
 
@@ -213,19 +209,22 @@ public class Knowledge implements Serializable {
      * Change les données sur la position actuelle de l'agent, principalement pour l'affichage du graphe
      */
     public void updateCurrentPosition() {
-    	
-    	this.currentPosition.setAttribute("ui.class", this.currentPosition.getAttribute("real.class"));
+        List<Attribute> attributes = this.currentPosition.getAttribute("contenu");
+        if (attributes.contains(Attribute.WUMPUS)
+                || attributes.contains(Attribute.HOWL)
+                || attributes.contains(Attribute.STENCH)) {
+            this.currentPosition.setAttribute("ui.class", "wumpus");
+        }
+        else if (attributes.contains(Attribute.TREASURE)) {
+            this.currentPosition.setAttribute("ui.class", "treasure");
+            this.currentPosition.setAttribute("ui.label", "treasure" + this.currentPosition.getId());
+        }
+        else {
+            this.currentPosition.setAttribute("ui.class", "visited");
+        }
         this.currentPosition = this.graph.getNode(this.myAgent.getCurrentPosition());
         this.currentPosition.setAttribute("visited", true);
         this.currentPosition.setAttribute("ui.class", "agent");
-        
-        try {
-	        if (this.currentPosition.getAttribute("real.class").equals("unvisited"))
-	        	this.currentPosition.setAttribute("real.class", "visited");
-        }
-        catch (Exception e) {
-        	this.currentPosition.setAttribute("real.class", "visited");
-        }
     }
 
     /**

@@ -30,7 +30,7 @@ public class Main {
 	public static void main(String[] args){
 
 		//0) Create the real environment and the observed one
-		env= new Environment(ENVtype.GRID_T,10,null);
+		env= new Environment(ENVtype.GRID_T,15,null);
 		//env= new Environment(ENVtype.DOROGOVTSEV,15,null);
 
 		
@@ -151,7 +151,7 @@ public class Main {
 			e.printStackTrace();
 			System.out.println("launching of sniffer agent failed");
 
-		}		
+		}
 
 
 	}
@@ -173,97 +173,17 @@ public class Main {
 	private static List<AgentController> createAgents(HashMap<String, ContainerController> containerList) {
 		System.out.println("Launching agents...");
 		ContainerController c;
-		String agentName;
 		List<AgentController> agentList=new ArrayList<AgentController>();
 
-		//wumpus on container0
-//		c = containerList.get("container0");
-//		agentName="Wumpus1";
-//		try {
-//
-//
-//			Object[] objtab=new Object[]{env,agentName};//used to give informations to the agent
-//			AgentController	ag=c.createNewAgent(agentName,DummyWumpusAgent.class.getName(),objtab);
-//			agentList.add(ag);
-//			System.out.println(agentName+" launched");
-//		} catch (StaleProxyException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-
-//		agentName="Wumpus2";
-//		try {
-//
-//
-//			Object[] objtab=new Object[]{env,agentName};//used to give informations to the agent
-//			AgentController	ag=c.createNewAgent(agentName,DummyAgentWumpus.class.getName(),objtab);
-//			agentList.add(ag);
-//			System.out.println(agentName+" launched");
-//		} catch (StaleProxyException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		//wumpus on container0
-//		c = containerList.get("container0");
-//		agentName="Wumpus3";
-//		try {
-//
-//
-//			Object[] objtab=new Object[]{env,agentName};//used to give informations to the agent
-//			AgentController	ag=c.createNewAgent(agentName,DummyAgentWumpus.class.getName(),objtab);
-//			agentList.add(ag);
-//			System.out.println(agentName+" launched");
-//		} catch (StaleProxyException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//
 		//Agent0 on container0
 		c = containerList.get("container0");
-		agentName="Explo1";
-		try {
 
-			Object[] objtab=new Object[]{env, new ExplorationProtocol()};//used to give informations to the agent
-			AgentController	ag=c.createNewAgent(agentName,AgentExplorateur.class.getName(),objtab);
-			agentList.add(ag);
-			System.out.println(agentName+" launched");
-		} catch (StaleProxyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// Ajout des agents
+		createAgent(c, agentList, "Explo1");
+		createAgent(c, agentList, "Explo2");
 
-
-		//Agent0 on container0
-		c = containerList.get("container0");
-		agentName="Explo2";
-		try {
-
-			Object[] objtab=new Object[]{env, new ExplorationProtocol()};//used to give informations to the agent
-			AgentController	ag=c.createNewAgent(agentName,AgentExplorateur.class.getName(),objtab);
-			agentList.add(ag);
-			System.out.println(agentName+" launched");
-		} catch (StaleProxyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-//		//Agent0 on container0
-//		c = containerList.get("container0");
-//		agentName="Explo3";
-//		try {
-//
-//
-//			Object[] objtab=new Object[]{env};//used to give informations to the agent
-//			AgentController	ag=c.createNewAgent(agentName,DummyExploAgent.class.getName(),objtab);
-//			agentList.add(ag);
-//			System.out.println(agentName+" launched");
-//		} catch (StaleProxyException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// Ajout du wumpus à l'environnement
+		createWumpus(c, agentList, "Golem");
 
 		System.out.println("Agents launched...");
 		return agentList;
@@ -290,6 +210,43 @@ public class Main {
 		System.out.println("Agents started...");
 	}
 
+	/**
+	 * Creates an agent and adds it to the list of Agents
+	 * @param c
+	 * @param agentList
+	 * @param agentName
+     */
+	private static void createAgent(ContainerController c, List<AgentController> agentList, String agentName) {
+		try {
+			Object[] objtab=new Object[]{env, new ExplorationProtocol()};//used to give informations to the agent
+			AgentController	ag=c.createNewAgent(agentName,AgentExplorateur.class.getName(),objtab);
+			agentList.add(ag);
+			System.out.println(agentName+" launched");
+		} catch (StaleProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Creates a Wumpus and adds it to the list of agents
+	 * @param c Container of Agents
+	 * @param agentList List of agents added to the environment
+	 * @param agentName Name to give to the Wumpus
+     */
+	private static void createWumpus(ContainerController c, List<AgentController> agentList, String agentName) {
+		System.out.println("Launching Wumpus...");
+
+		try {
+			Object[] objtab=new Object[]{env};//used to give informations to the agent
+			AgentController	ag=c.createNewAgent(agentName,mas.agents.DummyWumpusAgent.class.getName(),objtab);
+			agentList.add(ag);
+			System.out.println(agentName+" launched");
+		} catch (StaleProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
 
 
