@@ -114,14 +114,19 @@ public class AgentExplorateur extends abstractAgent {
      */
     public void displayKnowledge() {
         // Création du style des noeuds
-        String defaultNodeStyle= "node {"+"fill-color: black;"+" size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
-        String nodeStyle_agent= "node.agent {"+"fill-color: blue;"+"}";
+        String defaultNodeStyle = "node {fill-color: black; size-mode:fit;text-alignment:under; text-size:14;text-color:white;text-background-mode:rounded-box;text-background-color:black;}";
+        String nodeStyle_wumpus = "node.wumpus {fill-color: red;}";
+        String nodeStyle_agent = "node.agent {fill-color: blue;}";
+        String nodeStyle_treasure = "node.treasure {fill-color: yellow;}";
+        String nodeStyle_EntryExit = "node.exit {fill-color: green;}";
+        String nodeStyle_Well = "node.well {fill-color: cyan;}";
+        String nodeStyle_Wind = "node.wind {fill-color: pink;}";
+        String nodeStyle_Stench = "node.stench {fill-color: orange;}";
         String nodeStyle_visited= "node.visited {"+"fill-color: #347C2C;"+"}";
         String nodeStyle_unvisited= "node.unvisited {"+"fill-color: black;"+"}";
-        String nodeStyle_wumpus= "node.wumpus {"+"fill-color: red;"+"}";
-        String nodeStyle_treasure= "node.treasure {"+"fill-color: yellow;"+"}";
 
-        String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_visited+nodeStyle_unvisited+nodeStyle_treasure+nodeStyle_wumpus;
+        String nodeStyle=defaultNodeStyle+nodeStyle_agent+nodeStyle_visited+nodeStyle_unvisited
+                +nodeStyle_treasure+nodeStyle_wumpus+nodeStyle_EntryExit+nodeStyle_Stench+nodeStyle_Well+nodeStyle_Wind;
         System.setProperty("org.graphstream.ui.renderer", "org.graphstream.ui.j2dviewer.J2DGraphRenderer");
 
         this.getKnowledge().getGraph().setAttribute("ui.stylesheet",nodeStyle);

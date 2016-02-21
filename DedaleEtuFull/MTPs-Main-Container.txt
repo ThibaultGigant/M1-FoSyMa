@@ -1,1 +1,1 @@
-http://mbp-de-thibault:7778/acc
+http://tigig:7778/acc

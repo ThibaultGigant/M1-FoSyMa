@@ -6,6 +6,7 @@ import org.graphstream.graph.Node;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Classe permettant d'effectuer certaines actions courantes nécessaires au projet sur des graphes
@@ -18,23 +19,25 @@ public class GraphTools {
      * pour trouver l'ID du prochain noeud sur le chemin vers le prochain noeud encore non-visité
      * @param currentPosition ID du noeud courant de l'agent
      * @param graph graphe dans lequel on cherche
-     * @return ID du prochain noeud sur le chemin vers le prochain noeud encore non-visité
-     *          Retourne une chaine vide s'il n'y a plus de noeud non-visité dans le graphe (l'agent a déjà tout visité)
+     * @param stopCriterion critère d'arrêt de l'algorithme : valeur d'un attibut d'un noeud
+     * @return Liste des noeuds formant le chemin vers le prochain noeud voulu
+     *          Retourne une liste vite s'il n'y a plus de noeud correspondant au citère d'arrêt dans le graphe
      */
-    public static String nearestUnvisited(String currentPosition, Graph graph) {
+    public static List<String> pathToTarget(String currentPosition, Graph graph, String stopCriterion) {
         // Initialisation des variables nécessaires
         ArrayList<String> nodes = new ArrayList<String>(); // Liste des noeuds parcourus par l'algorithme
         HashMap<String, String> peres = new HashMap<String, String>(); // Map des IDs des noeuds et leur père dans le chemin
+        List<String> path = new ArrayList<String>(); // Liste des noeuds à parcourir pour aller au point voulu
         // Itérateur sur les successeurs d'un noeud
         Iterator<Node> nodeIterator;
         Node pere;
         Node tempNode = graph.getNode(currentPosition);
         boolean found = false;
-        String retour;
+        String temp;
 
         nodes.add(currentPosition);
 
-        // Recherche du premier noeud non-visité
+        // Recherche du premier noeud correspondant au critère d'arrêt
         while (!nodes.isEmpty() && !found) {
             pere = graph.getNode(nodes.get(0));
             nodeIterator = pere.getNeighborNodeIterator();
@@ -43,7 +46,7 @@ public class GraphTools {
                 tempNode = nodeIterator.next();
                 if (!peres.containsKey(tempNode.getId())) {
                     peres.put(tempNode.getId(), pere.getId());
-                    if (tempNode.getAttribute("visited").equals(false)) {
+                    if (tempNode.getAttribute(stopCriterion).equals(false)) {
                         found = true;
                         break;
                     }
@@ -52,15 +55,17 @@ public class GraphTools {
             }
         }
 
-        // Si found est toujours false, alors on a parcouru tout le graphe sans trouver de noeud non-visité
+        // Si found est toujours false, alors on a parcouru tout le graphe sans trouver de noeud correspondant au critère d'arrêt
         if (!found) {
-            return "";
+            return path;
         }
         // Sinon, recherche du premier noeud sur le chemin vers le noeud non-visité
-        retour = tempNode.getId();
-        while (!peres.get(retour).equals(currentPosition)) {
-            retour = peres.get(retour);
+        path.add(0, tempNode.getId());
+        temp = tempNode.getId();
+        while (!peres.get(temp).equals(currentPosition)) {
+            temp = peres.get(temp);
+            path.add(0, temp);
         }
-        return retour;
+        return path;
     }
 }

@@ -109,10 +109,12 @@ public class Knowledge implements Serializable {
                     n.setAttribute("ui.class", "treasure");
                     n.setAttribute("ui.label", "treasure" + n.getId());
                 }
-                else if (((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.WUMPUS)
-                        || ((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.HOWL)
-                        || ((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.STENCH)) {
+                else if (((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.WUMPUS)) {
                     n.setAttribute("ui.class", "wumpus");
+                }
+                else if (((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.HOWL)
+                        || ((List<Attribute>) n.getAttribute("contenu")).contains(Attribute.STENCH)) {
+                    n.setAttribute("ui.class", "stench");
                 }
                 else if (!((boolean) n.getAttribute("visited"))) {
                     n.setAttribute("ui.class", "unvisited");
@@ -162,7 +164,7 @@ public class Knowledge implements Serializable {
                         continue;
                     }
                 }
-                /* Le problème venait de là, c'est incompréhensible... */
+                /* Le problème venait de là, c'est incompréhensible, il faut absolument laisser le "else"... */
                 else {
                     // Ajout des attributs associés au noeud
                     n.setAttribute("contenu", attr);
@@ -193,8 +195,12 @@ public class Knowledge implements Serializable {
                 n.setAttribute("ui.class", "treasure");
                 n.setAttribute("ui.label", "treasure" + n.getId());
             }
-            else if (attr.contains(Attribute.WUMPUS) || attr.contains(Attribute.HOWL) || attr.contains(Attribute.STENCH)) {
+            else if (attr.contains(Attribute.WUMPUS)) {
                 n.setAttribute("ui.class", "wumpus");
+                n.setAttribute("visited", true);
+            }
+            else if (attr.contains(Attribute.HOWL) || attr.contains(Attribute.STENCH)) {
+                n.setAttribute("ui.class", "stench");
                 n.setAttribute("visited", true);
             }
             else if (!((boolean) n.getAttribute("visited"))) {
@@ -210,10 +216,12 @@ public class Knowledge implements Serializable {
      */
     public void updateCurrentPosition() {
         List<Attribute> attributes = this.currentPosition.getAttribute("contenu");
-        if (attributes.contains(Attribute.WUMPUS)
-                || attributes.contains(Attribute.HOWL)
-                || attributes.contains(Attribute.STENCH)) {
+        if (attributes.contains(Attribute.WUMPUS)) {
             this.currentPosition.setAttribute("ui.class", "wumpus");
+        }
+        else if (attributes.contains(Attribute.HOWL)
+                || attributes.contains(Attribute.STENCH)) {
+            this.currentPosition.setAttribute("ui.class", "stench");
         }
         else if (attributes.contains(Attribute.TREASURE)) {
             this.currentPosition.setAttribute("ui.class", "treasure");
