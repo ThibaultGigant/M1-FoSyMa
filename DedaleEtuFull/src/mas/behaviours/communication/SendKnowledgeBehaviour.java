@@ -3,6 +3,10 @@ package mas.behaviours.communication;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import mas.agents.AgentExplorateur;
 
@@ -27,20 +31,40 @@ public class SendKnowledgeBehaviour extends TickerBehaviour{
 		msg.setSender(this.myAgent.getAID());
 
 		if (myPosition!=""){
-			if (!myAgent.getLocalName().equals("Explo1")){
-				msg.addReceiver(new AID("Explo1",AID.ISLOCALNAME));
-			}else{
-				try {
-					msg.setContentObject(((AgentExplorateur) this.myAgent).getKnowledge().shareKnowledge("Explo1"));
-				} catch (IOException e) {
-					System.out.println("L'envoi a raté gros noeud");
-					e.printStackTrace();
-				}
-				msg.addReceiver(new AID("Explo2",AID.ISLOCALNAME));
+			DFAgentDescription dfd = new DFAgentDescription();
+			ServiceDescription sd  = new ServiceDescription();
+			sd.setType( "explorer" ); /* le même nom de service que celui qu'on a déclaré*/
+			dfd.addServices(sd);
+			            
+			DFAgentDescription[] result = {};
+			try {
+				result = DFService.search(this.myAgent, dfd);
+			} catch (FIPAException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-
-			((mas.abstractAgent)this.myAgent).sendMessage(msg);
-
+			            
+			//System.out.println(result.length + " results" );
+			
+			//if (result.length>0)
+				//System.out.println(" " + result[0].getName() );
+			
+			
+			for (DFAgentDescription fd : result) {
+				
+				if (!myAgent.getAID().equals(fd.getName())){
+					msg.addReceiver(fd.getName());
+				}else{
+					try {
+						msg.setContentObject(((AgentExplorateur) this.myAgent).getKnowledge().shareKnowledge(fd.getName().getLocalName()));
+					} catch (IOException e) {
+						System.out.println("L'envoi a raté gros noeud");
+						e.printStackTrace();
+					}
+				}
+	
+				((mas.abstractAgent)this.myAgent).sendMessage(msg);
+			}
 		}
 
 	}
