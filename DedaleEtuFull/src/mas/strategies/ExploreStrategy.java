@@ -26,6 +26,17 @@ public class ExploreStrategy implements IStrategy {
      * Chemin vers le point non visité le plus proche
      */
     List<String> path = new ArrayList<String>();
+    
+    /**
+     * Nombre de blocage consécutif
+     */
+    private int countBlocage = 0;
+    
+    /**
+     * Nombre de blocage consécutif maximal avant de se mettre en mode
+     * blocage
+     */
+    private int maxBlocage = 52;
 
     @Override
     public boolean moveTo(Graph knowledge) {
@@ -43,17 +54,20 @@ public class ExploreStrategy implements IStrategy {
         }
         // Sinon on va au prochain point sur le chemin
         else {
-            destination = path.remove(0);
-            while (!this.myAgent.moveTo(destination)) {
-                path.clear();
-                List<Couple<String, List<Attribute>>> lobs = this.myAgent.observe();//myPosition
-
-                //Random move from the current position
-                Random r = new Random();
-                int moveId = r.nextInt(lobs.size());
-                destination = lobs.get(moveId).getLeft();
+        	destination = path.get(0);
+        	if (this.myAgent.moveTo(destination)) {
+        		countBlocage = 0;
+        		destination = path.remove(0);
+        	}
+        	else {
+        		countBlocage++;
             }
         }
+        
+        if (countBlocage >= maxBlocage) {
+        	// TODO
+        }
+        
         return true;
     }
 
