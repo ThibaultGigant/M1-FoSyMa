@@ -14,6 +14,11 @@ import java.util.List;
 public class ObservationBehaviour extends TickerBehaviour {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1592899480895648091L;
+
+	/**
 	 * Constructeur
 	 * @param a Agent associé à ce behaviour
 	 * @param period période d'actualisation
