@@ -46,7 +46,7 @@ public class GraphTools {
                 tempNode = nodeIterator.next();
                 if (!peres.containsKey(tempNode.getId())) {
                     peres.put(tempNode.getId(), pere.getId());
-                    if (tempNode.getAttribute(stopCriterion).equals(false)) {
+                    if (tempNode.hasAttribute(stopCriterion) && tempNode.getAttribute(stopCriterion).equals(false)) {
                         found = true;
                         break;
                     }

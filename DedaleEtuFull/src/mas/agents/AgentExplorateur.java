@@ -3,7 +3,12 @@ package mas.agents;
 import env.Attribute;
 import env.Couple;
 import env.Environment;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import mas.abstractAgent;
+import mas.protocols.ExplorationProtocol;
 import mas.protocols.IProtocol;
 import mas.util.Knowledge;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -86,11 +91,26 @@ public class AgentExplorateur extends abstractAgent {
         final Object[] args = getArguments();
         if(args[0]!=null){
             deployAgent((Environment) args[0]);
-            protocol = (IProtocol) args[1];
+            protocol = new ExplorationProtocol();
+            registerOnDF("explorer");
         }else{
             System.err.println("Malfunction during parameter's loading of agent"+ this.getClass().getName());
             System.exit(-1);
         }
+    }
+
+    public void registerOnDF(String role) {
+        DFAgentDescription dfd = new DFAgentDescription();
+        dfd.setName(getAID()); /* getAID est l'AID de l'agent qui veut s'enregistrer*/
+        ServiceDescription sd  = new ServiceDescription();
+        sd.setType(role);
+        sd.setName(getLocalName() );
+        dfd.addServices(sd);
+
+        try {
+            DFService.register(this, dfd );
+        }
+        catch (FIPAException fe) { fe.printStackTrace(); }
     }
 
     /**

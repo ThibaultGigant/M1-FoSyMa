@@ -218,7 +218,7 @@ public class Main {
      */
 	private static void createAgent(ContainerController c, List<AgentController> agentList, String agentName) {
 		try {
-			Object[] objtab=new Object[]{env, new ExplorationProtocol()};//used to give informations to the agent
+			Object[] objtab=new Object[]{env};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,AgentExplorateur.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
