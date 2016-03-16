@@ -4,8 +4,10 @@ import env.Attribute;
 import env.Couple;
 import mas.abstractAgent;
 import mas.agents.AgentExplorateur;
+import mas.protocols.BlocageProtocol;
 import mas.protocols.RandomObserveProtocol;
 import mas.util.GraphTools;
+
 import org.graphstream.graph.Graph;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ public class ExploreStrategy implements IStrategy {
      * Nombre de blocage consécutif maximal avant de se mettre en mode
      * blocage
      */
-    private int maxBlocage = 5;
+    private int maxBlocage = 10;
 
     @Override
     public boolean moveTo(Graph knowledge) {
@@ -66,13 +68,17 @@ public class ExploreStrategy implements IStrategy {
         
         if (countBlocage >= maxBlocage) {
         	// TODO
-            List<Couple<String,List<Attribute>>> lobs=(this.myAgent).observe();//myPosition
+        	((AgentExplorateur) this.myAgent)
+        					.setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
+            /*
+        	List<Couple<String,List<Attribute>>> lobs=(this.myAgent).observe();//myPosition
             //Random move from the current position
             Random r= new Random();
             int moveId=r.nextInt(lobs.size());
 
             //The move action (if any) should be the last action of your behaviour
             (this.myAgent).moveTo(lobs.get(moveId).getLeft());
+            */
         }
         
         return true;

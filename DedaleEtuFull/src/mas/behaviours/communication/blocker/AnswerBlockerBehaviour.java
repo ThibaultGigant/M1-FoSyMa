@@ -2,20 +2,31 @@ package mas.behaviours.communication.blocker;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import mas.agents.AgentExplorateur;
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 public class AnswerBlockerBehaviour extends SimpleBehaviour {
 
-	private String destination;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8390804184844220786L;
+
+	private List<String> path;
 	
-	public AnswerBlockerBehaviour(final mas.abstractAgent myagent, String destination) {
+	private boolean finished = false;
+	
+	private Object[] data;
+	
+	public AnswerBlockerBehaviour(final Agent myagent, List<String> path) {
 		super(myagent);
-		this.destination = destination;
+		this.path = path;
 	}
 	
 	@Override
@@ -33,8 +44,11 @@ public class AnswerBlockerBehaviour extends SimpleBehaviour {
             try {
                 data = (Object[]) msg.getContentObject();
                 if (data != null) {
-                	AID senderIAD = (AID) data[0];
-                	String senderPosition = (String) data[1];
+                	// Stock data
+                	this.data = data;
+                	
+                	//AID senderIAD = (AID) data[0];
+                	//String senderPosition = (String) data[1];
                 	String senderDestination = (String) data[2];
                 	
                 	// L'agent vérifie que c'est bien lui qui bloque
@@ -42,25 +56,26 @@ public class AnswerBlockerBehaviour extends SimpleBehaviour {
                 		return;
                 	}
                 	
-                	Object[] dataContent = { ((mas.abstractAgent)this.myAgent).getAID() , ((mas.abstractAgent)this.myAgent).getCurrentPosition(), this.destination };
+                	Object[] dataContent = { ((mas.abstractAgent)this.myAgent).getAID() , ((mas.abstractAgent)this.myAgent).getCurrentPosition(), this.path };
                 	
                     accuseReception.setContentObject(dataContent);
                     ((AgentExplorateur) this.myAgent).sendMessage(accuseReception);
                     
-                    // TODO add NegociateBlockerBehaviour(data)
+                    
                 }
             }
             catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Message reception failed");
             }
+            this.finished = true;
         }
 	}
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
-		return false;
+		this.myAgent.addBehaviour(new NegociateBlockerBehaviour(this.myAgent, data));
+		return this.finished;
 	}
 
 }

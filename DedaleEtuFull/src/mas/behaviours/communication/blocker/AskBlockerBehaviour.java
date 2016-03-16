@@ -1,6 +1,7 @@
 package mas.behaviours.communication.blocker;
 
 import java.io.IOException;
+import java.util.List;
 
 import mas.agents.AgentExplorateur;
 import jade.core.Agent;
@@ -18,12 +19,11 @@ public class AskBlockerBehaviour extends SimpleBehaviour {
 	 */
 	private static final long serialVersionUID = 2300248729215239486L;
 	
-	private boolean finished = false;
-	private String destination;
+	private List<String> path;
 	
-	public AskBlockerBehaviour(final mas.abstractAgent myagent, String destination) {
+	public AskBlockerBehaviour(final mas.abstractAgent myagent, List<String> path) {
 		super(myagent);
-		this.destination = destination;
+		this.path = path;
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class AskBlockerBehaviour extends SimpleBehaviour {
 		if (myPosition!=""){
 			DFAgentDescription dfd = new DFAgentDescription();
 			ServiceDescription sd  = new ServiceDescription();
-			sd.setType( "explorer" );
+			sd.setType( "explorer" ); // TODO to change ?
 			dfd.addServices(sd);
 			            
 			DFAgentDescription[] result = {};
@@ -58,7 +58,7 @@ public class AskBlockerBehaviour extends SimpleBehaviour {
 	}
 
 	private void setContent(DFAgentDescription fd, ACLMessage msg) {
-		Object[] data = { ((mas.abstractAgent)this.myAgent).getAID() , ((mas.abstractAgent)this.myAgent).getCurrentPosition(), this.destination };
+		Object[] data = { ((mas.abstractAgent)this.myAgent).getAID() , ((mas.abstractAgent)this.myAgent).getCurrentPosition(), this.path };
 		try {
 			msg.setContentObject(data);
 		} catch (IOException e) {
@@ -69,7 +69,8 @@ public class AskBlockerBehaviour extends SimpleBehaviour {
 	@Override
 	public boolean done() {
 		// TODO add NegociateBlockerBehaviour
-		return finished;
+		this.myAgent.addBehaviour(new ConfirmBlockerBehaviour(this.myAgent));
+		return true;
 	}
 
 }

@@ -26,6 +26,8 @@ public class AgentExplorateur extends abstractAgent {
      * Connaissance de l'agent
      */
     Knowledge knowledge;
+    
+    private String job = "explorer";
 
     /**
      * Protocole que suivra l'agent
@@ -41,6 +43,10 @@ public class AgentExplorateur extends abstractAgent {
 
     public IProtocol getProtocol() {
         return protocol;
+    }
+    
+    public String getJob() {
+    	return this.job;
     }
 
     public void setKnowledge(Knowledge knowledge) {
@@ -91,8 +97,9 @@ public class AgentExplorateur extends abstractAgent {
         final Object[] args = getArguments();
         if(args[0]!=null){
             deployAgent((Environment) args[0]);
+            this.job = (String) args[1];
             protocol = new ExplorationProtocol();
-            registerOnDF("explorer");
+            registerOnDF(this.job);
         }else{
             System.err.println("Malfunction during parameter's loading of agent"+ this.getClass().getName());
             System.exit(-1);

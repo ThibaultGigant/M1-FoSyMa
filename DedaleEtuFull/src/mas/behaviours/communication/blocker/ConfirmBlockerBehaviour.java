@@ -1,12 +1,21 @@
 package mas.behaviours.communication.blocker;
 
+import java.util.List;
+
 import mas.agents.AgentExplorateur;
 import jade.core.AID;
+import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 public class ConfirmBlockerBehaviour extends SimpleBehaviour {
+	
+	private boolean finished = false;
+	
+	public ConfirmBlockerBehaviour(final Agent myagent) {
+		super(myagent);
+	}
 
 	@Override
 	public void action() {
@@ -28,8 +37,10 @@ public class ConfirmBlockerBehaviour extends SimpleBehaviour {
                 	if (!senderDestination.equals(((mas.abstractAgent)this.myAgent).getCurrentPosition())) {
                 		return;
                 	}
-                    
-                    // TODO add NegociateBlockerBehaviour(data)
+
+                	
+            		this.myAgent.addBehaviour(new NegociateBlockerBehaviour(this.myAgent, data));
+            		this.finished = true;
                 }
             }
             catch (Exception e) {
@@ -41,8 +52,7 @@ public class ConfirmBlockerBehaviour extends SimpleBehaviour {
 
 	@Override
 	public boolean done() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.finished;
 	}
 
 }
