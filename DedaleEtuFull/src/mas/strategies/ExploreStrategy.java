@@ -36,7 +36,7 @@ public class ExploreStrategy implements IStrategy {
      * Nombre de blocage consécutif maximal avant de se mettre en mode
      * blocage
      */
-    private int maxBlocage = 52;
+    private int maxBlocage = 5;
 
     @Override
     public boolean moveTo(Graph knowledge) {
@@ -57,7 +57,7 @@ public class ExploreStrategy implements IStrategy {
         	destination = path.get(0);
         	if (this.myAgent.moveTo(destination)) {
         		countBlocage = 0;
-        		destination = path.remove(0);
+        		path.remove(0);
         	}
         	else {
         		countBlocage++;
@@ -66,7 +66,13 @@ public class ExploreStrategy implements IStrategy {
         
         if (countBlocage >= maxBlocage) {
         	// TODO
-        	
+            List<Couple<String,List<Attribute>>> lobs=(this.myAgent).observe();//myPosition
+            //Random move from the current position
+            Random r= new Random();
+            int moveId=r.nextInt(lobs.size());
+
+            //The move action (if any) should be the last action of your behaviour
+            (this.myAgent).moveTo(lobs.get(moveId).getLeft());
         }
         
         return true;

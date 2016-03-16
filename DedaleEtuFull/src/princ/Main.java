@@ -30,15 +30,15 @@ public class Main {
 	public static void main(String[] args){
 
 		//0) Create the real environment and the observed one
-		env= new Environment(ENVtype.GRID_T,15,null);
-		//env= new Environment(ENVtype.DOROGOVTSEV,15,null);
+		//env= new Environment(ENVtype.GRID_T,3,null);
+		env= new Environment(ENVtype.DOROGOVTSEV,150,null);
 
-		
+
 		//1), create the platform (Main container (DF+AMS) + containers + monitoring agents : RMA and SNIFFER)
 		rt=emptyPlatform(containerList);
 
 		//2) create agents and add them to the platform.
-		agentList=createAgents(containerList);
+		agentList=createAgents(containerList, 5);
 
 		//3) launch agents
 		startAgents(agentList);
@@ -170,7 +170,7 @@ public class Main {
 	 *@param containerList :Name and container's ref
 	 *@return the agentList
 	 */
-	private static List<AgentController> createAgents(HashMap<String, ContainerController> containerList) {
+	private static List<AgentController> createAgents(HashMap<String, ContainerController> containerList, int nbAgents) {
 		System.out.println("Launching agents...");
 		ContainerController c;
 		List<AgentController> agentList=new ArrayList<AgentController>();
@@ -179,8 +179,8 @@ public class Main {
 		c = containerList.get("container0");
 
 		// Ajout des agents
-		createAgent(c, agentList, "Explo1");
-		createAgent(c, agentList, "Explo2");
+		for (int i = 1; i < nbAgents ; i++)
+			createAgent(c, agentList, "Explo" + i);
 
 		// Ajout du wumpus à l'environnement
 		createWumpus(c, agentList, "Golem");
@@ -215,7 +215,7 @@ public class Main {
 	 * @param c
 	 * @param agentList
 	 * @param agentName
-     */
+	 */
 	private static void createAgent(ContainerController c, List<AgentController> agentList, String agentName) {
 		try {
 			Object[] objtab=new Object[]{env};//used to give informations to the agent
@@ -233,7 +233,7 @@ public class Main {
 	 * @param c Container of Agents
 	 * @param agentList List of agents added to the environment
 	 * @param agentName Name to give to the Wumpus
-     */
+	 */
 	private static void createWumpus(ContainerController c, List<AgentController> agentList, String agentName) {
 		System.out.println("Launching Wumpus...");
 

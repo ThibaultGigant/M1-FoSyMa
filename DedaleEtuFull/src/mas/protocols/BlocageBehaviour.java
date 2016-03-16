@@ -21,7 +21,7 @@ public class BlocageBehaviour extends AbstractProtocol {
 
     @Override
     public void addBehaviours(abstractAgent myAgent) {
-        behaviours.add(new AskBlockerBehaviour(lastProtocol));
+        //behaviours.add(new AskBlockerBehaviour(lastProtocol));
 
         behaviours.forEach(myAgent::addBehaviour);
     }
