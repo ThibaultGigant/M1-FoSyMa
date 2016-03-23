@@ -1,1 +1,1 @@
-http://ppti-14-509-09.ufr-info-p6.jussieu.fr:7778/acc
+http://eduroam87.canalip.upmc.fr:7778/acc

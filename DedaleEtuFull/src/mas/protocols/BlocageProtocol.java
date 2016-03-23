@@ -34,7 +34,11 @@ public class BlocageProtocol extends AbstractProtocol {
     public List<String> getPath() {
     	return this.path;
     }
-    
+
+    public IProtocol getLastProtocol() {
+        return lastProtocol;
+    }
+
     @Override
     public void addBehaviours(abstractAgent myAgent) {
         behaviours.add(new AskBlockerBehaviour(myAgent, path));
