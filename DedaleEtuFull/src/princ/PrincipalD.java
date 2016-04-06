@@ -11,8 +11,11 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import mas.agents.AgentExplorateur;
 import mas.agents.DummyExploAgent;
 import mas.agents.DummyMigrationAgent;
+import mas.agents.MigratingAgentExplorateur;
+import mas.agents.Ulysse31MovingAgent;
 import mas.agents.DummyWumpusAgent;
 import mas.agents.GateKeeperAgent;
 
@@ -30,7 +33,7 @@ import env.Environment.ENVtype;
 
 public class PrincipalD {
 
-	private static String PLATFORM_HOSTNAME ="132.227.205.25";// "127.0.0.1"; 
+	private static String PLATFORM_HOSTNAME ="132.227.112.239";// "127.0.0.1"; 
 	private static String PLATFORM_ID="Ithaq";
 	private static Integer PLATFORM_PORT=8888;
 	
@@ -79,13 +82,13 @@ public class PrincipalD {
 				//We only have to create the local container and our agents
 
 				//1') If a distant platform already exist and you want to create and connect your container to it
-				containerList.putAll(createAndConnectContainer("MyLocalContainer", PLATFORM_HOSTNAME, PLATFORM_ID, PLATFORM_PORT));
+				containerList.putAll(createAndConnectContainer("08-Odysseus", PLATFORM_HOSTNAME, PLATFORM_ID, PLATFORM_PORT));
 				
 				//2) create agents and add them to the platform.
-				//agentList=createAgents(containerList);
+				agentList=createAgents(containerList);
 
 				//3) launch agents
-				//startAgents(agentList);
+				startAgents(agentList);
 			}
 		}
 	}
@@ -263,13 +266,13 @@ public class PrincipalD {
 		 *Distributed, the main already exist, we deploy the migration agent on MyLocalContainer
 		 */
 		
-		c = containerList.get("MyLocalContainer");
+		c = containerList.get("08-Odysseus");
 		Assert.assertNotNull("This container does not exist",c);
-		agentName="Ulysse1";
+		agentName="08-Ulysse31";
 		String gatekeeperName="GK";
 		try {
-			Object[] objtab=new Object[]{gatekeeperName};//used to give informations to the agent
-			AgentController	ag=c.createNewAgent(agentName,DummyMigrationAgent.class.getName(),objtab);
+			Object[] objtab=new Object[]{gatekeeperName, "explorer"};//used to give informations to the agent
+			AgentController	ag=c.createNewAgent(agentName,MigratingAgentExplorateur.class.getName(),objtab);
 			agentList.add(ag);
 			System.out.println(agentName+" launched");
 		} catch (StaleProxyException e) {

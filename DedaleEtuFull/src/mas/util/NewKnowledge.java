@@ -17,7 +17,7 @@ import java.util.List;
  * Tous les outils liés à ces connaissances seront dans cette classe.
  * Created by Tigig on 10/02/2016.
  */
-public class Knowledge implements Serializable {
+public class NewKnowledge implements Serializable {
 
     /**
 	 * 
@@ -36,7 +36,7 @@ public class Knowledge implements Serializable {
      * - le statut de ce noeud : visité ou non (boolean)
      * - le contenu (trésor, etc...) : "List&lt;Attribute&gt;"
      */
-    private Graph graph;
+    private HashMap<String, HashMap<String, HashMap<String, Object>>> graph;
 
     /**
      * HashMap représentant la dernière communication avec l'agent dont l'ID est la clé de la HashMap
@@ -46,20 +46,26 @@ public class Knowledge implements Serializable {
     /**
      * Dernière position connue de l'agent
      */
-    Node currentPosition;
+    String currentPosition;
 
     /**
      * Constructeur, à initialiser avec un graphe déjà instancié.
      * @param myAgent agent dont cette classe représente les connaissances
      * @param graph graphe des connaissances initiales de l'agent
      */
-    public Knowledge(abstractAgent myAgent, Graph graph) {
+    public NewKnowledge(abstractAgent myAgent) {
         this.myAgent = myAgent;
-        this.graph = graph;
-        this.currentPosition = this.graph.addNode(this.myAgent.getCurrentPosition());
-        this.currentPosition.setAttribute("visited", true);
-        this.currentPosition.setAttribute("ui.class", "agent");
-        this.currentPosition.setAttribute("date", new Date());
+        this.graph = new HashMap<>();
+        this.currentPosition = this.myAgent.getCurrentPosition();
+        HashMap<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("visited", true);
+        attributes.put("ui.class", "agent");
+        attributes.put("date", new Date());
+        HashMap<String, HashMap<String,Object>> hash = new HashMap<String, HashMap<String,Object>>();
+        hash.put(this.currentPosition, attributes);
+        this.graph.put("nodes", hash);
+        this.graph.put("edges", new HashMap<String, HashMap<String,Object>>());
+        this.graph.put("date", new HashMap<String, HashMap<String,Object>>());
     }
 
     /**
@@ -69,11 +75,11 @@ public class Knowledge implements Serializable {
         return myAgent;
     }
 
-    public Graph getGraph() {
+    public HashMap<String, HashMap<String, HashMap<String, Object>>> getGraph() {
         return graph;
     }
 
-    public void setGraph(Graph graph) {
+    public void setGraph(HashMap<String, HashMap<String, HashMap<String, Object>>> graph) {
         this.graph = graph;
     }
 
@@ -88,10 +94,10 @@ public class Knowledge implements Serializable {
          * Sinon regarder si la date dans le nouveau graphe est plus récente, si c'est le cas, mettre à jour
          */
         for (String nodeID: newKnowledge.get("nodes").keySet()) {
-            Node n = this.getGraph().getNode(nodeID);
+        	
             // Si n n'est pas null, alors il y a conflit et on prend le dernier mis à jour, sauf si celui-ci est non-visité
-            if (n != null) {
-                Date oldDate = (Date) n.getAttribute("date");
+            if (this.graph.get("nodes").containsKey(nodeID)) {
+                Date oldDate = (Date) this.graph.get("date").get(nodeID).get("date");
                 Date newDate = (Date) newKnowledge.get("nodes").get(nodeID).get("date");
                 if (oldDate.compareTo(newDate) < 0
                         && !((boolean) n.getAttribute("visited") && !(boolean) newKnowledge.get("nodes").get(nodeID).get("visited"))) {
