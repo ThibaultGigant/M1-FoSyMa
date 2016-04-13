@@ -15,7 +15,7 @@ public class BlocageProtocol extends AbstractProtocol {
     /**
      * Dernier protocole suivi par l'agent, afin qu'il puisse le retrouver après résolution du blocage
      */
-    IProtocol lastProtocol;
+    private IProtocol lastProtocol;
     
     /**
      * Chemin que l'agent voudrait emprunter

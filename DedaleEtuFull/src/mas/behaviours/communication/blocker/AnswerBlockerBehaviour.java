@@ -31,12 +31,15 @@ public class AnswerBlockerBehaviour extends SimpleBehaviour {
 	
 	@Override
 	public void action() {
-		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.INFORM_IF);
+		final MessageTemplate msgTemplate = MessageTemplate.and(
+				MessageTemplate.MatchPerformative(ACLMessage.INFORM_IF),
+				MessageTemplate.MatchProtocol("BlocageProtocol"));
 
         final ACLMessage msg = this.myAgent.receive(msgTemplate);
 
         if (msg != null) {
             ACLMessage accuseReception = new ACLMessage(ACLMessage.CONFIRM);
+            accuseReception.setProtocol("BlocageProtocol");
             accuseReception.addReceiver(msg.getSender());
             accuseReception.setSender(this.myAgent.getAID());//new AID(this.myAgent.getLocalName(), AID.ISLOCALNAME));
             Object[] data;
@@ -49,7 +52,7 @@ public class AnswerBlockerBehaviour extends SimpleBehaviour {
                 	
                 	//AID senderIAD = (AID) data[0];
                 	//String senderPosition = (String) data[1];
-                	String senderDestination = (String) data[2];
+                	String senderDestination = ((List<String>) data[2]).get(0);
                 	
                 	// L'agent vérifie que c'est bien lui qui bloque
                 	if (!senderDestination.equals(((mas.abstractAgent)this.myAgent).getCurrentPosition())) {
@@ -60,8 +63,6 @@ public class AnswerBlockerBehaviour extends SimpleBehaviour {
                 	
                     accuseReception.setContentObject(dataContent);
                     ((AgentExplorateur) this.myAgent).sendMessage(accuseReception);
-                    
-                    
                 }
             }
             catch (Exception e) {
@@ -74,7 +75,8 @@ public class AnswerBlockerBehaviour extends SimpleBehaviour {
 
 	@Override
 	public boolean done() {
-		this.myAgent.addBehaviour(new NegociateBlockerBehaviour(this.myAgent, data));
+		if (this.finished)
+			this.myAgent.addBehaviour(new NegociateBlockerBehaviour(this.myAgent, data));
 		return this.finished;
 	}
 

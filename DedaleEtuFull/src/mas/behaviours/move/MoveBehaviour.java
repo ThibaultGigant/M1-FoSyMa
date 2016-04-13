@@ -1,5 +1,7 @@
 package mas.behaviours.move;
 
+import org.junit.Assert;
+
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import mas.agents.AgentExplorateur;

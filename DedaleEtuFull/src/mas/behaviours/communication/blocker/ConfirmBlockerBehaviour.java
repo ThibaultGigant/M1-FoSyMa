@@ -19,7 +19,9 @@ public class ConfirmBlockerBehaviour extends SimpleBehaviour {
 
 	@Override
 	public void action() {
-		final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.CONFIRM);
+		final MessageTemplate msgTemplate = MessageTemplate.and(
+				MessageTemplate.MatchPerformative(ACLMessage.CONFIRM),
+				MessageTemplate.MatchProtocol("BlocageProtocol"));
 
         final ACLMessage msg = this.myAgent.receive(msgTemplate);
 
@@ -31,7 +33,7 @@ public class ConfirmBlockerBehaviour extends SimpleBehaviour {
                 if (data != null) {
                 	AID senderIAD = (AID) data[0];
                 	String senderPosition = (String) data[1];
-                	String senderDestination = (String) data[2];
+                	String senderDestination = ((List<String>) data[2]).get(0);
                 	
                 	// L'agent vérifie que c'est bien lui qui bloque
                 	if (!senderDestination.equals(((mas.abstractAgent)this.myAgent).getCurrentPosition())) {

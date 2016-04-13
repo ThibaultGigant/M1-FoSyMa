@@ -30,8 +30,8 @@ public class Main {
 	public static void main(String[] args){
 
 		//0) Create the real environment and the observed one
-		env= new Environment(ENVtype.GRID,5,null);
-		//env= new Environment(ENVtype.DOROGOVTSEV,150,null);
+		//env= new Environment(ENVtype.GRID,3,null);
+		env= new Environment(ENVtype.DOROGOVTSEV,15,null);
 
 
 		//1), create the platform (Main container (DF+AMS) + containers + monitoring agents : RMA and SNIFFER)

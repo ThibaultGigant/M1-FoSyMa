@@ -31,6 +31,7 @@ public class AskBlockerBehaviour extends SimpleBehaviour {
 		String myPosition=((mas.abstractAgent)this.myAgent).getCurrentPosition();
 
 		ACLMessage msg=new ACLMessage(ACLMessage.INFORM_IF);
+		msg.setProtocol("BlocageProtocol");
 		msg.setSender(this.myAgent.getAID());
 
 		if (myPosition!=""){
@@ -52,12 +53,14 @@ public class AskBlockerBehaviour extends SimpleBehaviour {
 					this.setContent(fd, msg);
 				}
 	
-				((mas.abstractAgent)this.myAgent).sendMessage(msg);
 			}
+
+			((mas.abstractAgent)this.myAgent).sendMessage(msg);
 		}
 	}
 
 	private void setContent(DFAgentDescription fd, ACLMessage msg) {
+		System.out.println("Piano\n");
 		Object[] data = { ((mas.abstractAgent)this.myAgent).getAID() , ((mas.abstractAgent)this.myAgent).getCurrentPosition(), this.path };
 		try {
 			msg.setContentObject(data);

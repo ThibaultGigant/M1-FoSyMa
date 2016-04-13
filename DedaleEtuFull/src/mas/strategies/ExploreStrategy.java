@@ -9,6 +9,7 @@ import mas.protocols.RandomObserveProtocol;
 import mas.util.GraphTools;
 
 import org.graphstream.graph.Graph;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class ExploreStrategy implements IStrategy {
 
         // Si le chemin est vide, c'est qu'on a tout visité
         if (path.isEmpty()) {
+        	System.out.println("Fin");
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }

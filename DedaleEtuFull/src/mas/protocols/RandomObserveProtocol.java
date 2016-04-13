@@ -9,6 +9,7 @@ import mas.behaviours.move.RandomWalkBehaviour;
 public class RandomObserveProtocol extends AbstractProtocol {
     @Override
     public void addBehaviours(mas.abstractAgent myAgent) {
+    	System.out.println("La");
         behaviours.add(new ObservationBehaviour(myAgent, 900));
         behaviours.add(new RandomWalkBehaviour(myAgent));
         behaviours.forEach(myAgent::addBehaviour);

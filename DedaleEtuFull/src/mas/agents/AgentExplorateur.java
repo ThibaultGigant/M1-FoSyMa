@@ -60,6 +60,8 @@ public class AgentExplorateur extends abstractAgent {
      */
     public void setProtocol(IProtocol protocol) {
         // Clean behaviours
+    	System.out.println(protocol.getClass().getName());
+    	
         this.protocol.removeBehaviours(this);
         // Change le protocole et l'applique
         this.protocol = protocol;
