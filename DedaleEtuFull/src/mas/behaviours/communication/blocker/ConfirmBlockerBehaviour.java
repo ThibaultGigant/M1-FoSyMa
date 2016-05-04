@@ -13,6 +13,8 @@ public class ConfirmBlockerBehaviour extends SimpleBehaviour {
 	
 	private boolean finished = false;
 	
+	
+	
 	public ConfirmBlockerBehaviour(final Agent myagent) {
 		super(myagent);
 	}
