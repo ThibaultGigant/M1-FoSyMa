@@ -1,11 +1,11 @@
-package mas.behaviours.communication;
+package src.mas.behaviours.communication;
 
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import mas.agents.AgentExplorateur;
+import src.mas.agents.AgentExplorateur;
 
 import java.io.IOException;
 import java.util.Date;
@@ -22,12 +22,15 @@ public class ReceiveKnowledgeBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
-        final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+        final MessageTemplate msgTemplate = MessageTemplate.and(
+                MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                MessageTemplate.MatchProtocol("Knowledge"));
 
         final ACLMessage msg = this.myAgent.receive(msgTemplate);
 
         if (msg != null) {
             ACLMessage accuseReception = new ACLMessage(ACLMessage.CONFIRM);
+            accuseReception.setProtocol("Knowledge");
             accuseReception.addReceiver(msg.getSender());
             accuseReception.setSender(this.myAgent.getAID());//new AID(this.myAgent.getLocalName(), AID.ISLOCALNAME));
             HashMap<String, HashMap<String, HashMap<String, Object>>> message;

@@ -1,16 +1,16 @@
-package mas.behaviours.communication.blocker;
+package src.mas.behaviours.communication.blocker;
 
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import mas.abstractAgent;
-import mas.agents.AgentExplorateur;
-import mas.behaviours.move.MoveBehaviour;
-import mas.protocols.BlocageProtocol;
+import src.mas.agents.AgentExplorateur;
+import src.mas.behaviours.move.MoveBehaviour;
+import src.mas.protocols.BlocageProtocol;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
-import mas.strategies.MoveCauseBlockStrategy;
+import src.mas.strategies.MoveCauseBlockStrategy;
 
 import java.io.IOException;
 

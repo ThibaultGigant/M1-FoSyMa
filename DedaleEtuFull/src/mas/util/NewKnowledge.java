@@ -1,4 +1,4 @@
-package mas.util;
+package src.mas.util;
 
 import env.Attribute;
 import env.Couple;
@@ -36,7 +36,8 @@ public class NewKnowledge implements Serializable {
      * - le statut de ce noeud : visité ou non (boolean)
      * - le contenu (trésor, etc...) : "List&lt;Attribute&gt;"
      */
-    private HashMap<String, HashMap<String, HashMap<String, Object>>> graph;
+    //private HashMap<String, HashMap<String, HashMap<String, Object>>> graph;
+    private Graph graph;
 
     /**
      * HashMap représentant la dernière communication avec l'agent dont l'ID est la clé de la HashMap
@@ -46,14 +47,15 @@ public class NewKnowledge implements Serializable {
     /**
      * Dernière position connue de l'agent
      */
-    String currentPosition;
+    //String currentPosition;
+    Node currentPosition;
 
     /**
      * Constructeur, à initialiser avec un graphe déjà instancié.
      * @param myAgent agent dont cette classe représente les connaissances
      * @param graph graphe des connaissances initiales de l'agent
      */
-    public NewKnowledge(abstractAgent myAgent) {
+    /*public NewKnowledge(abstractAgent myAgent) {
         this.myAgent = myAgent;
         this.graph = new HashMap<>();
         this.currentPosition = this.myAgent.getCurrentPosition();
@@ -66,6 +68,15 @@ public class NewKnowledge implements Serializable {
         this.graph.put("nodes", hash);
         this.graph.put("edges", new HashMap<String, HashMap<String,Object>>());
         this.graph.put("date", new HashMap<String, HashMap<String,Object>>());
+    }*/
+
+    public NewKnowledge(abstractAgent myAgent, Graph graph) {
+        this.myAgent = myAgent;
+        this.graph = graph;
+        this.currentPosition = this.graph.addNode(this.myAgent.getCurrentPosition());
+        this.currentPosition.setAttribute("visited", true);
+        this.currentPosition.setAttribute("ui.class", "agent");
+        this.currentPosition.setAttribute("date", new Date());
     }
 
     /**
@@ -75,11 +86,13 @@ public class NewKnowledge implements Serializable {
         return myAgent;
     }
 
-    public HashMap<String, HashMap<String, HashMap<String, Object>>> getGraph() {
+    //public HashMap<String, HashMap<String, HashMap<String, Object>>> getGraph() {
+    public Graph getGraph() {
         return graph;
     }
 
-    public void setGraph(HashMap<String, HashMap<String, HashMap<String, Object>>> graph) {
+    //public void setGraph(HashMap<String, HashMap<String, HashMap<String, Object>>> graph) {
+    public void setGraph(Graph graph) {
         this.graph = graph;
     }
 
@@ -93,7 +106,7 @@ public class NewKnowledge implements Serializable {
          * Pour chaque noeud du nouveau graphe, s'il n'est pas dans les connaissances, l'ajouter
          * Sinon regarder si la date dans le nouveau graphe est plus récente, si c'est le cas, mettre à jour
          */
-        for (String nodeID: newKnowledge.get("nodes").keySet()) {
+        /*for (String nodeID: newKnowledge.get("nodes").keySet()) {
         	
             // Si n n'est pas null, alors il y a conflit et on prend le dernier mis à jour, sauf si celui-ci est non-visité
             if (this.graph.get("nodes").containsKey(nodeID)) {
@@ -143,14 +156,14 @@ public class NewKnowledge implements Serializable {
             } catch (Exception e) {
                 continue;
             }
-        }
+        }*/
     }
 
     /**
      * Permet la mise à jour de la connaissance d'un agent depuis une observation
      * @param lobs liste d'observations
      */
-    public void updateKnowledge(List<Couple<String, List<Attribute>>> lobs) {
+    /*public void updateKnowledge(List<Couple<String, List<Attribute>>> lobs) {
         Date date = new Date();
         String currentNode = this.myAgent.getCurrentPosition();
         Node n;
@@ -160,7 +173,7 @@ public class NewKnowledge implements Serializable {
          * Pour chaque noeud de la liste donée, s'il n'est pas dans les connaissances, l'ajouter
          * Sinon mettre à jour ses données avec ce qu'on a observé
          */
-        for (Couple<String, List<Attribute>> couple: lobs) {
+        /*for (Couple<String, List<Attribute>> couple: lobs) {
             n = this.getGraph().getNode(couple.getLeft());
             attr = couple.getRight();
 
@@ -176,7 +189,7 @@ public class NewKnowledge implements Serializable {
                     }
                 }
                 /* Le problème venait de là, c'est incompréhensible, il faut absolument laisser le "else"... */
-                else {
+      /*          else {
                     // Ajout des attributs associés au noeud
                     n.setAttribute("contenu", attr);
                 }
@@ -220,7 +233,7 @@ public class NewKnowledge implements Serializable {
         }
 
         this.updateCurrentPosition();
-    }
+    }*/
 
     /**
      * Change les données sur la position actuelle de l'agent, principalement pour l'affichage du graphe

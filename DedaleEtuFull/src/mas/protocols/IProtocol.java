@@ -1,4 +1,4 @@
-package mas.protocols;
+package src.mas.protocols;
 
 
 public interface IProtocol {

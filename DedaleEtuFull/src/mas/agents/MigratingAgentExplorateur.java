@@ -1,4 +1,4 @@
-package mas.agents;
+package src.mas.agents;
 
 import env.Attribute;
 import env.Couple;
@@ -10,10 +10,10 @@ import jade.domain.FIPAException;
 import mas.abstractAgent;
 import mas.agents.interactions.protocols.deployMe.R1_deployMe;
 import mas.agents.interactions.protocols.deployMe.R1_managerAnswer;
-import mas.behaviours.migration.MigrationBehaviour;
-import mas.protocols.ExplorationProtocol;
-import mas.protocols.IProtocol;
-import mas.util.Knowledge;
+import src.mas.behaviours.migration.MigrationBehaviour;
+import src.mas.protocols.ExplorationProtocol;
+import src.mas.protocols.IProtocol;
+import src.mas.util.Knowledge;
 
 import org.graphstream.graph.implementations.SingleGraph;
 

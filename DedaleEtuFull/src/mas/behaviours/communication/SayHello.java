@@ -1,4 +1,4 @@
-package mas.behaviours.communication;
+package src.mas.behaviours.communication;
 
 import jade.core.AID;
 import jade.core.Agent;

@@ -1,4 +1,4 @@
-package mas.util;
+package src.mas.util;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;

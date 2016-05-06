@@ -1,8 +1,8 @@
-package mas.behaviours.communication;
+package src.mas.behaviours.communication;
 
 import java.io.IOException;
 
-import mas.agents.AgentExplorateur;
+import src.mas.agents.AgentExplorateur;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
@@ -31,9 +31,12 @@ public abstract class SendBehaviour extends TickerBehaviour {
 
 		if (myPosition!=""){
 			DFAgentDescription dfd = new DFAgentDescription();
-			ServiceDescription sd  = new ServiceDescription();
-			sd.setType( "explorer" ); /* le même nom de service que celui qu'on a déclaré*/
-			dfd.addServices(sd);
+			ServiceDescription sd_explorer  = new ServiceDescription();
+			sd_explorer.setType( "explorer" ); /* le même nom de service que celui qu'on a déclaré*/
+			ServiceDescription sd_hunter  = new ServiceDescription();
+			sd_hunter.setType( "hunter" );
+			dfd.addServices(sd_explorer);
+			dfd.addServices(sd_hunter);
 			            
 			DFAgentDescription[] result = {};
 			try {

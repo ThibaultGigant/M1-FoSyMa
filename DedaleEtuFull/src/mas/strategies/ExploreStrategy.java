@@ -1,12 +1,12 @@
-package mas.strategies;
+package src.mas.strategies;
 
 import env.Attribute;
 import env.Couple;
 import mas.abstractAgent;
-import mas.agents.AgentExplorateur;
-import mas.protocols.BlocageProtocol;
-import mas.protocols.RandomObserveProtocol;
-import mas.util.GraphTools;
+import src.mas.agents.AgentExplorateur;
+import src.mas.protocols.BlocageProtocol;
+import src.mas.protocols.RandomObserveProtocol;
+import src.mas.util.GraphTools;
 
 import org.graphstream.graph.Graph;
 import org.junit.Assert;
@@ -52,7 +52,7 @@ public class ExploreStrategy implements IStrategy {
 
         // Si le chemin est vide, c'est qu'on a tout visité
         if (path.isEmpty()) {
-        	System.out.println("Fin");
+        	System.out.println(this.myAgent.getLocalName() + " | Fin");
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }

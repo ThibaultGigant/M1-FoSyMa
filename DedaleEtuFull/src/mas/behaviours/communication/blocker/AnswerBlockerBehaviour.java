@@ -1,10 +1,10 @@
-package mas.behaviours.communication.blocker;
+package src.mas.behaviours.communication.blocker;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import mas.agents.AgentExplorateur;
+import src.mas.agents.AgentExplorateur;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;

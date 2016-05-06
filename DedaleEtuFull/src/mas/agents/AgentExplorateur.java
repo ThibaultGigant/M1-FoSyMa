@@ -1,4 +1,9 @@
-package mas.agents;
+package src.mas.agents;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import org.graphstream.graph.implementations.SingleGraph;
 
 import env.Attribute;
 import env.Couple;
@@ -7,15 +12,11 @@ import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import mas.abstractAgent;
-import mas.protocols.ExplorationProtocol;
-import mas.protocols.IProtocol;
-import mas.util.Knowledge;
-import org.graphstream.graph.implementations.SingleGraph;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import mas.abstractAgent;
+import src.mas.protocols.IProtocol;
+import src.mas.protocols.ExplorationProtocol;
+import src.mas.util.Knowledge;
 
 /**
  * Agent principal du projet
@@ -87,21 +88,32 @@ public class AgentExplorateur extends abstractAgent {
         //Add the behaviours
         this.protocol.addBehaviours(this);
 
-        System.out.println("the agent "+this.getLocalName()+ " is started");
+        System.out.println("the agent "+this.getLocalName()+ " is started | AgentExplorateur");
         this.displayKnowledge();
     }
 
     /**
      * Récupère les arguments et initialise l'agent avec ces données
+     *      • args[0] : environnement
+     *      • args[1] : job
+     *      • args[2] : protocol initiale
      */
     private void setupArguments() {
         //get the parameters given into the object[]. In the current case, the environment where the agent will evolve
         final Object[] args = getArguments();
         if(args[0]!=null){
             deployAgent((Environment) args[0]);
+
             this.job = (String) args[1];
-            protocol = new ExplorationProtocol();
             registerOnDF(this.job);
+
+            switch (this.job) {
+                case "explorer":
+                    this.protocol = new ExplorationProtocol();
+                    break;
+                case "hunter":
+                    break;
+            }
         }else{
             System.err.println("Malfunction during parameter's loading of agent"+ this.getClass().getName());
             System.exit(-1);

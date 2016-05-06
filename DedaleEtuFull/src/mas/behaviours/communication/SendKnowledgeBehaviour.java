@@ -1,4 +1,4 @@
-package mas.behaviours.communication;
+package src.mas.behaviours.communication;
 
 import jade.core.AID;
 import jade.core.Agent;
@@ -8,7 +8,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-import mas.agents.AgentExplorateur;
+import src.mas.agents.AgentExplorateur;
 
 import java.io.IOException;
 
@@ -26,6 +26,7 @@ public class SendKnowledgeBehaviour extends SendBehaviour {
 	@Override
 	public void setContent(DFAgentDescription fd, ACLMessage msg) {
 		try {
+			msg.setProtocol("Knowledge");
 			msg.setContentObject(((AgentExplorateur) this.myAgent).getKnowledge().shareKnowledge(fd.getName().getLocalName()));
 		} catch (IOException e) {
 			System.out.println("L'envoi a raté gros noeud");

@@ -1,4 +1,4 @@
-package mas.behaviours.catchTreasure;
+package src.mas.behaviours.catchTreasure;
 
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;

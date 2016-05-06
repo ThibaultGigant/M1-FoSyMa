@@ -1,10 +1,10 @@
-package mas.behaviours.communication;
+package src.mas.behaviours.communication;
 
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import mas.agents.AgentExplorateur;
+import src.mas.agents.AgentExplorateur;
 
 import java.util.Date;
 
@@ -18,7 +18,9 @@ public class AckReceiveKnowledgeBehaviour extends SimpleBehaviour {
 
     @Override
     public void action() {
-        final MessageTemplate msgTemplate = MessageTemplate.MatchPerformative(ACLMessage.CONFIRM);
+        final MessageTemplate msgTemplate = MessageTemplate.and(
+                MessageTemplate.MatchPerformative(ACLMessage.CONFIRM),
+                MessageTemplate.MatchProtocol("Knowledge"));
 
         final ACLMessage msg = this.myAgent.receive(msgTemplate);
 

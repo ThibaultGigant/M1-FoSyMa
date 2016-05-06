@@ -1,4 +1,4 @@
-package mas.agents;
+package src.mas.agents;
 
 import mas.abstractAgent;
 

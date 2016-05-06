@@ -1,5 +1,8 @@
-package princ;
+package src.princ;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import env.Environment;
 import env.Environment.ENVtype;
@@ -10,12 +13,10 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import mas.agents.AgentExplorateur;
-import mas.protocols.ExplorationProtocol;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import src.mas.agents.AgentExplorateur;
+import src.mas.protocols.IProtocol;
+import src.mas.protocols.ExplorationProtocol;
 
 
 public class Main {
@@ -38,7 +39,7 @@ public class Main {
 		rt=emptyPlatform(containerList);
 
 		//2) create agents and add them to the platform.
-		agentList=createAgents(containerList, 2, "explorer");
+		agentList=createAgents(containerList, 5, "explorer");
 
 		//3) launch agents
 		startAgents(agentList);

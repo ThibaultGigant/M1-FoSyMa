@@ -1,0 +1,6 @@
+A faire :
+        Si un agent est bloqué et qu'il n'arrive à rien, essayer de chercher un nouv eau chemin, sans passer par la
+    case ganante.
+        Si un cycle est présent, à prendre en compte
+        Si on est coincé entre plusieurs agents prioritaire, en informer les autres
+        Possibilité de boucle en blocage 2 à 2 (à traiter dans le cas où dans MoveBlock.tryToMove, l'agent bouge grace au if en dehors du for)

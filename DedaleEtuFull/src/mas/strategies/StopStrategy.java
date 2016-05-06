@@ -1,4 +1,4 @@
-package mas.strategies;
+package src.mas.strategies;
 
 import mas.abstractAgent;
 import org.graphstream.graph.Graph;

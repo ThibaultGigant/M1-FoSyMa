@@ -1,4 +1,4 @@
-package mas.protocols;
+package src.mas.protocols;
 
 import jade.core.behaviours.Behaviour;
 import mas.abstractAgent;
@@ -21,5 +21,6 @@ public abstract class AbstractProtocol implements IProtocol, Serializable{
     @Override
     public void removeBehaviours(abstractAgent myAgent) {
         behaviours.forEach(myAgent::removeBehaviour);
+        behaviours.clear();
     }
 }

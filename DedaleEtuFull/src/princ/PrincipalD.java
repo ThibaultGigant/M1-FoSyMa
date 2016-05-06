@@ -1,4 +1,4 @@
-package princ;
+package src.princ;
 
 
 
@@ -11,11 +11,11 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import mas.agents.AgentExplorateur;
-import mas.agents.DummyExploAgent;
+import src.mas.agents.AgentExplorateur;
+import src.mas.agents.DummyExploAgent;
 import mas.agents.DummyMigrationAgent;
-import mas.agents.MigratingAgentExplorateur;
-import mas.agents.Ulysse31MovingAgent;
+import src.mas.agents.MigratingAgentExplorateur;
+import src.mas.agents.Ulysse31MovingAgent;
 import mas.agents.DummyWumpusAgent;
 import mas.agents.GateKeeperAgent;
 

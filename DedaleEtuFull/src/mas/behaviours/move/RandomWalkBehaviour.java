@@ -1,4 +1,4 @@
-package mas.behaviours.move;
+package src.mas.behaviours.move;
 
 import java.io.IOException;
 import java.util.List;
