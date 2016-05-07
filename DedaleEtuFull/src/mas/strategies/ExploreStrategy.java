@@ -13,7 +13,6 @@ import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Stratégie de déplacement correspondant à l'exploration : on va au plus proche non-visité
@@ -21,24 +20,17 @@ import java.util.Random;
  */
 public class ExploreStrategy implements IStrategy {
     /**
-     * Agent sur lequel s'applique la stratégie
+     * myAgent      : Agent sur lequel s'applique la stratégie
+     * path         : Chemin vers le point non visité le plus proche
+     * casesToAvoid : Liste des cases à éviter
+     * countBlocage : Nombre de blocage consécutif
+     * maxBlocage   : Nombre de blocage consécutif maximal avant de se mettre en mode
+     *                  blocage
      */
     mas.abstractAgent myAgent;
-
-    /**
-     * Chemin vers le point non visité le plus proche
-     */
     List<String> path = new ArrayList<String>();
-    
-    /**
-     * Nombre de blocage consécutif
-     */
+    private List<String> casesToAvoid = new ArrayList<String>();
     private int countBlocage = 0;
-    
-    /**
-     * Nombre de blocage consécutif maximal avant de se mettre en mode
-     * blocage
-     */
     private int maxBlocage = 10;
 
     @Override
@@ -47,12 +39,13 @@ public class ExploreStrategy implements IStrategy {
 
         // Récupération du chemin
         if (path.isEmpty()) {
-            path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited");
+            path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", casesToAvoid);
+            casesToAvoid.clear();
         }
 
         // Si le chemin est vide, c'est qu'on a tout visité
         if (path.isEmpty()) {
-        	System.out.println(this.myAgent.getLocalName() + " | Fin");
+        	//System.out.println(this.myAgent.getLocalName() + " | Fin");
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }
@@ -86,6 +79,13 @@ public class ExploreStrategy implements IStrategy {
         return true;
     }
 
+    public void setPath(List<String> path) {
+        this.path = path;
+    }
+
+    public List<String> getCasesToAvoid() {
+        return casesToAvoid;
+    }
 
     @Override
     public void setMyAgent(abstractAgent myAgent) {

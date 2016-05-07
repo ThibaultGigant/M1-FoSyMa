@@ -39,12 +39,12 @@ public class RandomWalkBehaviour extends TickerBehaviour{
 		if (myPosition!=""){
 			//List of observable from the agent's current position
 			List<Couple<String,List<Attribute>>> lobs=((mas.abstractAgent)this.myAgent).observe();//myPosition
-			System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lobs);
+			//System.out.println(this.myAgent.getLocalName()+" -- list of observables: "+lobs);
 
 			//Little pause to allow you to follow what is going on
 			/*
 			try {
-				System.out.println("Press a key to allow the agent "+this.myAgent.getLocalName() +" to execute its next move");
+				//System.out.println("Press a key to allow the agent "+this.myAgent.getLocalName() +" to execute its next move");
 				System.in.read();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -60,11 +60,11 @@ public class RandomWalkBehaviour extends TickerBehaviour{
 			for(Attribute a:lattribute){
 				switch (a) {
 				case TREASURE:
-					System.out.println("My current backpack capacity is:"+ ((mas.abstractAgent)this.myAgent).getBackPackFreeSpace());
-					System.out.println("Value of the treasure on the current position: "+a.getValue());
-					System.out.println("The agent grabbed :"+((mas.abstractAgent)this.myAgent).pick());
-					System.out.println("the remaining backpack capacity is: "+ ((mas.abstractAgent)this.myAgent).getBackPackFreeSpace());
-					System.out.println("The value of treasure on the current position: (unchanged before a new call to observe()): "+a.getValue());
+					//System.out.println("My current backpack capacity is:"+ ((mas.abstractAgent)this.myAgent).getBackPackFreeSpace());
+					//System.out.println("Value of the treasure on the current position: "+a.getValue());
+					//System.out.println("The agent grabbed :"+((mas.abstractAgent)this.myAgent).pick());
+					//System.out.println("the remaining backpack capacity is: "+ ((mas.abstractAgent)this.myAgent).getBackPackFreeSpace());
+					//System.out.println("The value of treasure on the current position: (unchanged before a new call to observe()): "+a.getValue());
 					b=true;
 					break;
 
@@ -76,7 +76,7 @@ public class RandomWalkBehaviour extends TickerBehaviour{
 			//If the agent picked (part of) the treasure
 			if (b){
 				List<Couple<String,List<Attribute>>> lobs2=((mas.abstractAgent)this.myAgent).observe();//myPosition
-				System.out.println("lobs after picking "+lobs2);
+				//System.out.println("lobs after picking "+lobs2);
 			}
 
 			//Random move from the current position

@@ -68,7 +68,7 @@ public class Principal {
 
 		// 1) create a platform (main container+DF+AMS)
 		Profile pMain = new ProfileImpl(hostname, 8888, null);
-		System.out.println("Launching a main-container..."+pMain);
+		//System.out.println("Launching a main-container..."+pMain);
 		AgentContainer mainContainerRef = rt.createMainContainer(pMain); //DF and AMS are include
 
 		// 2) create the containers
@@ -77,7 +77,7 @@ public class Principal {
 		// 3) create monitoring agents : rma agent, used to debug and monitor the platform; sniffer agent, to monitor communications; 
 		createMonitoringAgents(mainContainerRef);
 
-		System.out.println("Plaform ok");
+		//System.out.println("Plaform ok");
 		return rt;
 
 	}
@@ -96,30 +96,30 @@ public class Principal {
 		HashMap<String, ContainerController> containerList=new HashMap<String, ContainerController>();//bad to do it here.
 
 
-		System.out.println("Launching containers ...");
+		//System.out.println("Launching containers ...");
 
 		//create the container0	
 		containerName="container0";
 		pContainer = new ProfileImpl(null, 8888, null);
-		System.out.println("Launching container "+pContainer);
+		//System.out.println("Launching container "+pContainer);
 		containerRef = rt.createAgentContainer(pContainer); //ContainerController replace AgentContainer in the new versions of Jade.
 		containerList.put(containerName, containerRef);
 
 		//create the container1	
 		containerName="container1";
 		pContainer = new ProfileImpl(null, 8888, null);
-		System.out.println("Launching container "+pContainer);
+		//System.out.println("Launching container "+pContainer);
 		containerRef = rt.createAgentContainer(pContainer); //ContainerController replace AgentContainer in the new versions of Jade.
 		containerList.put(containerName, containerRef);
 
 		//create the container2	
 		containerName="container2";
 		pContainer = new ProfileImpl(null, 8888, null);
-		System.out.println("Launching container "+pContainer);
+		//System.out.println("Launching container "+pContainer);
 		containerRef = rt.createAgentContainer(pContainer); //ContainerController replace AgentContainer in the new versions of Jade.
 		containerList.put(containerName, containerRef);
 
-		System.out.println("Launching containers done");
+		//System.out.println("Launching containers done");
 		return containerList;
 	}
 
@@ -133,7 +133,7 @@ public class Principal {
 	 */
 	private static void createMonitoringAgents(ContainerController mc) {
 
-		System.out.println("Launching the rma agent on the main container ...");
+		//System.out.println("Launching the rma agent on the main container ...");
 		AgentController rma;
 
 		try {
@@ -141,10 +141,10 @@ public class Principal {
 			rma.start();
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
-			System.out.println("Launching of rma agent failed");
+			//System.out.println("Launching of rma agent failed");
 		}
 
-		System.out.println("Launching  Sniffer agent on the main container...");
+		//System.out.println("Launching  Sniffer agent on the main container...");
 		AgentController snif=null;
 
 		try {
@@ -153,7 +153,7 @@ public class Principal {
 
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
-			System.out.println("launching of sniffer agent failed");
+			//System.out.println("launching of sniffer agent failed");
 
 		}		
 
@@ -176,7 +176,7 @@ public class Principal {
 	 *@return the agentList
 	 */
 	private static List<AgentController> createAgents(HashMap<String, ContainerController> containerList) {
-		System.out.println("Launching agents...");
+		//System.out.println("Launching agents...");
 		ContainerController c;
 		String agentName;
 		List<AgentController> agentList=new ArrayList<AgentController>();
@@ -190,7 +190,7 @@ public class Principal {
 //			Object[] objtab=new Object[]{env,agentName};//used to give informations to the agent
 //			AgentController	ag=c.createNewAgent(agentName,DummyWumpusAgent.class.getName(),objtab);
 //			agentList.add(ag);
-//			System.out.println(agentName+" launched");
+//			//System.out.println(agentName+" launched");
 //		} catch (StaleProxyException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -203,7 +203,7 @@ public class Principal {
 //			Object[] objtab=new Object[]{env,agentName};//used to give informations to the agent
 //			AgentController	ag=c.createNewAgent(agentName,DummyAgentWumpus.class.getName(),objtab);
 //			agentList.add(ag);
-//			System.out.println(agentName+" launched");
+//			//System.out.println(agentName+" launched");
 //		} catch (StaleProxyException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -218,7 +218,7 @@ public class Principal {
 //			Object[] objtab=new Object[]{env,agentName};//used to give informations to the agent
 //			AgentController	ag=c.createNewAgent(agentName,DummyAgentWumpus.class.getName(),objtab);
 //			agentList.add(ag);
-//			System.out.println(agentName+" launched");
+//			//System.out.println(agentName+" launched");
 //		} catch (StaleProxyException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -233,7 +233,7 @@ public class Principal {
 			Object[] objtab=new Object[]{env};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,DummyExploAgent.class.getName(),objtab);
 			agentList.add(ag);
-			System.out.println(agentName+" launched");
+			//System.out.println(agentName+" launched");
 		} catch (StaleProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -248,7 +248,7 @@ public class Principal {
 			Object[] objtab=new Object[]{env};//used to give informations to the agent
 			AgentController	ag=c.createNewAgent(agentName,DummyExploAgent.class.getName(),objtab);
 			agentList.add(ag);
-			System.out.println(agentName+" launched");
+			//System.out.println(agentName+" launched");
 		} catch (StaleProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -263,13 +263,13 @@ public class Principal {
 //			Object[] objtab=new Object[]{env};//used to give informations to the agent
 //			AgentController	ag=c.createNewAgent(agentName,DummyExploAgent.class.getName(),objtab);
 //			agentList.add(ag);
-//			System.out.println(agentName+" launched");
+//			//System.out.println(agentName+" launched");
 //		} catch (StaleProxyException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 
-		System.out.println("Agents launched...");
+		//System.out.println("Agents launched...");
 		return agentList;
 	}
 
@@ -279,7 +279,7 @@ public class Principal {
 	 */
 	private static void startAgents(List<AgentController> agentList){
 
-		System.out.println("Starting agents...");
+		//System.out.println("Starting agents...");
 
 
 		for(final AgentController ac: agentList){
@@ -291,7 +291,7 @@ public class Principal {
 			}
 
 		}
-		System.out.println("Agents started...");
+		//System.out.println("Agents started...");
 	}
 
 }

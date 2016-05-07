@@ -336,7 +336,7 @@ public class NewKnowledge implements Serializable {
      * @param date date de communication
      */
     public void updateLastCommunication(String agentID, Date date) {
-        System.out.println("Mise à jour dernière com de " + this.myAgent.getLocalName() + " avec " + agentID + "pour la date " + date);
+        //System.out.println("Mise à jour dernière com de " + this.myAgent.getLocalName() + " avec " + agentID + "pour la date " + date);
         this.lastCommunication.put(agentID, date);
     }
 }

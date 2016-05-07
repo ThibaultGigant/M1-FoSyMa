@@ -25,7 +25,7 @@ public class AckReceiveKnowledgeBehaviour extends SimpleBehaviour {
         final ACLMessage msg = this.myAgent.receive(msgTemplate);
 
         if (msg != null) {
-            System.out.println("<----Accusé Réception from "+msg.getSender().getLocalName() + " reçu");
+            //System.out.println("<----Accusé Réception from "+msg.getSender().getLocalName() + " reçu");
             try {
                 Date date = (Date) msg.getContentObject();
                 String agentID = msg.getSender().getLocalName();
@@ -33,7 +33,7 @@ public class AckReceiveKnowledgeBehaviour extends SimpleBehaviour {
             }
             catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Accusé réception mal écrit");
+                //System.out.println("Accusé réception mal écrit");
             }
         }
     }

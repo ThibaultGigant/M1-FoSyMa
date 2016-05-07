@@ -45,6 +45,11 @@ public class MoveBlock {
         this.places = this.myAgent.observe();
     }
 
+    public void setOther(AID otherAgent, List<String> otherPath) {
+        this.otherAgent = otherAgent;
+        this.otherPath = otherPath;
+    }
+
     /**
      * Cette fonction essaie de faire bouger l'agent pour laisser le champs libre
      * à l'agent qu'il bloque

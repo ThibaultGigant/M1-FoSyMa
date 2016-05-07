@@ -74,6 +74,10 @@ public class BlocageProcedure {
         }
     }
 
+    /**
+     * Possibilité de bloquer plusieurs autres agents
+     * Nombre d'itération limitée
+     */
     public boolean Answer() {
         this.counter ++;
 
@@ -107,7 +111,7 @@ public class BlocageProcedure {
                     accuseReception.setProtocol("BlocageProtocol");
                     accuseReception.addReceiver(msg.getSender());
                     accuseReception.setSender(this.myAgent.getAID());
-                    System.out.println("<----Message received from "+msg.getSender().getLocalName());
+                    //System.out.println("<----Message received from "+msg.getSender().getLocalName());
 
                     // Création du contenu du message
                     Object[] dataContent = { this.myAgent.getAID() , this.myAgent.getCurrentPosition(), this.path, valuation() };
@@ -119,7 +123,7 @@ public class BlocageProcedure {
             }
             catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Message reception failed");
+                //System.out.println("Message reception failed");
             }
         }
         return (this.counter < this.maxTry);
@@ -143,17 +147,25 @@ public class BlocageProcedure {
     }
 
     public Object[] Confirm() {
+        return Confirm(false);
+    }
+
+    public Object[] Confirm(boolean flag) {
+        String after = "";
+        if (flag)
+            after = " | After";
+
         // Description du message à lire
         final MessageTemplate msgTemplate = MessageTemplate.and(
                 MessageTemplate.MatchPerformative(ACLMessage.CONFIRM),
-                MessageTemplate.MatchProtocol("BlocageProtocol"));
+                MessageTemplate.MatchProtocol("BlocageProtocol" + after));
 
         // Récupération du message à lire
         final ACLMessage msg = this.myAgent.receive(msgTemplate);
 
         if (msg != null) {
             Object[] data;
-            System.out.println("<----Message received from "+msg.getSender().getLocalName());
+            //System.out.println("<----Message received from "+msg.getSender().getLocalName() + after);
             try {
                 // Récupération des données du message
                 data = (Object[]) msg.getContentObject();
@@ -175,11 +187,29 @@ public class BlocageProcedure {
             }
             catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Message reception failed");
+                //System.out.println("Message reception failed");
             }
         }
         // Confirmation non reçu
         return null;
+    }
+
+    public void AnswerAfter(Object[] other) {
+        // Création du message de confirmation
+        ACLMessage accuseReception = new ACLMessage(ACLMessage.CONFIRM);
+        accuseReception.setProtocol("BlocageProtocol | After");
+        accuseReception.addReceiver((AID) other[0]);
+        accuseReception.setSender(this.myAgent.getAID());
+
+        // Création du contenu du message
+        Object[] dataContent = { this.myAgent.getAID() , ((mas.abstractAgent)this.myAgent).getCurrentPosition(), this.path, valuation() };
+        try {
+            accuseReception.setContentObject(dataContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ((abstractAgent) this.myAgent).sendMessage(accuseReception);
     }
 
     private float valuation() {
@@ -205,6 +235,8 @@ public class BlocageProcedure {
                 puce = -1;
                 break;
         }
+
+        //System.out.println(this.myAgent.getLocalName() + "|  Valeur : " + puce * result);
 
         return puce*result;
     }

@@ -24,16 +24,36 @@ public class GraphTools {
      *          Retourne une liste vite s'il n'y a plus de noeud correspondant au citère d'arrêt dans le graphe
      */
     public static List<String> pathToTarget(String currentPosition, Graph graph, String stopCriterion) {
+        return pathToTarget(currentPosition, graph, stopCriterion, null);
+    }
+
+    /**
+     * Effectue un parcours en largeur du graphe à partir de la position courante
+     * pour trouver l'ID du prochain noeud sur le chemin vers le prochain noeud encore non-visité
+     * @param currentPosition ID du noeud courant de l'agent
+     * @param graph graphe dans lequel on cherche
+     * @param stopCriterion critère d'arrêt de l'algorithme : valeur d'un attibut d'un noeud
+     * @param casesToAvoid liste des noeuds à éviter
+     * @return Liste des noeuds formant le chemin vers le prochain noeud voulu
+     *          Retourne une liste vite s'il n'y a plus de noeud correspondant au citère d'arrêt dans le graphe
+     */
+    public static List<String> pathToTarget(String currentPosition, Graph graph, String stopCriterion, List<String> casesToAvoid) {
         // Initialisation des variables nécessaires
         ArrayList<String> nodes = new ArrayList<String>(); // Liste des noeuds parcourus par l'algorithme
         HashMap<String, String> peres = new HashMap<String, String>(); // Map des IDs des noeuds et leur père dans le chemin
         List<String> path = new ArrayList<String>(); // Liste des noeuds à parcourir pour aller au point voulu
+        List<Node> nodesToAvoid = new ArrayList<Node>(); // Liste des noeuds à éviter
         // Itérateur sur les successeurs d'un noeud
         Iterator<Node> nodeIterator;
         Node pere;
         Node tempNode = graph.getNode(currentPosition);
         boolean found = false;
         String temp;
+
+        // Liste des noeud à éviter
+        if (casesToAvoid != null)
+            for (String caseToAvoid : casesToAvoid)
+                nodesToAvoid.add(graph.getNode(caseToAvoid));
 
         nodes.add(currentPosition);
 
@@ -44,7 +64,7 @@ public class GraphTools {
             nodes.remove(0);
             while (nodeIterator.hasNext()) {
                 tempNode = nodeIterator.next();
-                if (!peres.containsKey(tempNode.getId())) {
+                if (!peres.containsKey(tempNode.getId()) && !nodesToAvoid.contains(tempNode)) {
                     peres.put(tempNode.getId(), pere.getId());
                     if (tempNode.hasAttribute(stopCriterion) && tempNode.getAttribute(stopCriterion).equals(false)) {
                         found = true;

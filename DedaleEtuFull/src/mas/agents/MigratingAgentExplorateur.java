@@ -95,7 +95,7 @@ public class MigratingAgentExplorateur extends abstractAgent {
         this.addBehaviour(new MigrationBehaviour(this));
         //this.protocol.addBehaviours(this);
 
-        System.out.println("the agent "+this.getLocalName()+ " is started");
+        //System.out.println("the agent "+this.getLocalName()+ " is started");
         //this.displayKnowledge();
     }
 

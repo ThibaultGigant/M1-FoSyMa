@@ -34,12 +34,12 @@ public class ReceiveKnowledgeBehaviour extends SimpleBehaviour {
             accuseReception.addReceiver(msg.getSender());
             accuseReception.setSender(this.myAgent.getAID());//new AID(this.myAgent.getLocalName(), AID.ISLOCALNAME));
             HashMap<String, HashMap<String, HashMap<String, Object>>> message;
-            System.out.println("<----Message received from "+msg.getSender().getLocalName());
+            //System.out.println("<----Message received from "+msg.getSender().getLocalName());
             try {
                 message = (HashMap<String, HashMap<String, HashMap<String, Object>>>) msg.getContentObject();
                 if (message != null) {
                     /*try {
-                        System.out.println("Press a key to allow the agent "+this.myAgent.getLocalName() +" to execute its next move");
+                        //System.out.println("Press a key to allow the agent "+this.myAgent.getLocalName() +" to execute its next move");
                         System.in.read();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -51,11 +51,11 @@ public class ReceiveKnowledgeBehaviour extends SimpleBehaviour {
             }
             catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Message reception failed");
+                //System.out.println("Message reception failed");
             }
         }
         /*else{
-            System.out.println("Receiver - No message received");
+            //System.out.println("Receiver - No message received");
         }*/
     }
 
