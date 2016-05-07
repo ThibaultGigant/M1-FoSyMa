@@ -3,14 +3,12 @@ package src.mas.strategies;
 import env.Attribute;
 import env.Couple;
 import mas.abstractAgent;
+import org.graphstream.graph.Graph;
+import org.w3c.dom.Attr;
 import src.mas.agents.AgentExplorateur;
 import src.mas.protocols.BlocageProtocol;
 import src.mas.protocols.RandomObserveProtocol;
-import src.mas.protocols.HunterProtocol;
 import src.mas.util.GraphTools;
-
-import org.graphstream.graph.Graph;
-import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +17,22 @@ import java.util.List;
  * Stratégie de déplacement correspondant à l'exploration : on va au plus proche non-visité
  * Created by Tigig on 13/02/2016.
  */
-public class ExploreStrategy implements IStrategy {
+public class HunterStrategy implements IStrategy {
     /**
-     * myAgent      : Agent sur lequel s'applique la stratégie
-     * path         : Chemin vers le point non visité le plus proche
-     * casesToAvoid : Liste des cases à éviter
-     * countBlocage : Nombre de blocage consécutif
-     * maxBlocage   : Nombre de blocage consécutif maximal avant de se mettre en mode
-     *                  blocage
+     * myAgent              : Agent sur lequel s'applique la stratégie
+     * path                 : Chemin vers le point non visité le plus proche
+     * casesToAvoid         : Liste des cases à éviter
+     * treasureToPurchase   : Trésor en ligne de mire
+     *
+     * countBlocage         : Nombre de blocage consécutif
+     * maxBlocage           : Nombre de blocage consécutif maximal avant de se mettre en mode
+     *                          blocage
      */
-    mas.abstractAgent myAgent;
+    abstractAgent myAgent;
     List<String> path = new ArrayList<String>();
     private List<String> casesToAvoid = new ArrayList<String>();
+    private String treasureToPurchase;
+
     private int countBlocage = 0;
     private int maxBlocage = 10;
 
@@ -38,17 +40,40 @@ public class ExploreStrategy implements IStrategy {
     public boolean moveTo(Graph knowledge) {
         String destination;
 
+        // Si l'on n'a plus de place dans notre sac
+        if (myAgent.getBackPackFreeSpace() == 0) {
+            //System.out.println(this.myAgent.getLocalName() + " | Fin");
+            ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
+            return false;
+        }
+
         // Récupération du chemin
         if (path.isEmpty()) {
-            path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", casesToAvoid);
+            // Si l'on a atteint
+            if (myAgent.getCurrentPosition().equals(treasureToPurchase)) {
+                for (Attribute attr : ((List< Attribute>) knowledge.getNode(myAgent.getCurrentPosition()).getAttribute("contenu"))) {
+                    if (attr.equals(Attribute.TREASURE) && (Integer) attr.getValue() > 0 ) {
+                        System.out.println(attr.toString());
+                        System.out.println("Pick");
+                        myAgent.pick();
+                    }
+
+                }
+            }
+            //path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", casesToAvoid);
+            path = GraphTools.bestPath(myAgent.getCurrentPosition(), knowledge, casesToAvoid, myAgent.getBackPackFreeSpace());
+            // S'il y a un trésor au bout du chemin
+            if (path.size() > 0 && ((List< Attribute>) knowledge.getNode(path.get(path.size() - 1)).getAttribute("contenu")).contains(Attribute.TREASURE))
+                treasureToPurchase = path.get(path.size() - 1);
+            else
+                treasureToPurchase = "";
             casesToAvoid.clear();
         }
 
-        // Si le chemin est vide, c'est qu'on a tout visité
+        // Si le chemin est vide, c'est qu'on a tout pris
         if (path.isEmpty()) {
         	//System.out.println(this.myAgent.getLocalName() + " | Fin");
-            //((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
-            ((AgentExplorateur) this.myAgent).setProtocol(new HunterProtocol());
+            ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }
         // Sinon on va au prochain point sur le chemin

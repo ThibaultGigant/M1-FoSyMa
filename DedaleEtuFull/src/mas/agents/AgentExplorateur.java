@@ -16,6 +16,7 @@ import jade.domain.FIPAException;
 import mas.abstractAgent;
 import src.mas.protocols.IProtocol;
 import src.mas.protocols.ExplorationProtocol;
+import src.mas.protocols.HunterProtocol;
 import src.mas.util.Knowledge;
 
 /**
@@ -112,6 +113,7 @@ public class AgentExplorateur extends abstractAgent {
                     this.protocol = new ExplorationProtocol();
                     break;
                 case "hunter":
+                    this.protocol = new HunterProtocol();
                     break;
             }
         }else{

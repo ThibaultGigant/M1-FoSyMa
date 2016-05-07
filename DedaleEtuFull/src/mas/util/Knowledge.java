@@ -172,6 +172,12 @@ public class Knowledge implements Serializable {
                 /* Le problème venait de là, c'est incompréhensible, il faut absolument laisser le "else"... */
                 else {
                     // Ajout des attributs associés au noeud
+                    for (Attribute a : attr) {
+                        if (a.equals(Attribute.TREASURE) && (Integer) a.getValue() == 0) {
+                            attr.remove(a);
+                            break;
+                        }
+                    }
                     n.setAttribute("contenu", attr);
                 }
             }

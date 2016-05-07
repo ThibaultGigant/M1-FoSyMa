@@ -32,17 +32,19 @@ public class Main {
 
 		//0) Create the real environment and the observed one
 		//env= new Environment(ENVtype.GRID,3,null);
-		env= new Environment(ENVtype.DOROGOVTSEV,15,null);
+		env= new Environment(ENVtype.DOROGOVTSEV_T,15,null);
 
 
 		//1), create the platform (Main container (DF+AMS) + containers + monitoring agents : RMA and SNIFFER)
 		rt=emptyPlatform(containerList);
 
 		//2) create agents and add them to the platform.
-		agentList=createAgents(containerList, 5, "explorer");
+		agentList=createAgents(containerList, 2, "explorer");
+		//addAgents(agentList, containerList, 2, "hunter");
 
 		//3) launch agents
 		startAgents(agentList);
+
 
 	}
 
@@ -179,15 +181,58 @@ public class Main {
 		//Agent0 on container0
 		c = containerList.get("container0");
 
+		String name = "";
+		switch (job) {
+			case "explorer":
+				name = "Explo";
+				break;
+			case "hunter":
+				name = "Hunter";
+				break;
+		}
+
 		// Ajout des agents
-		for (int i = 1; i <= nbAgents ; i++)
-			createAgent(c, agentList, "Explo" + i, job);
+		for (int i = 1 ; i <= nbAgents ; i++)
+			createAgent(c, agentList, name + i, job);
 
 		// Ajout du wumpus à l'environnement
 		//createWumpus(c, agentList, "Golem");
 
 		//System.out.println("Agents launched...");
 		return agentList;
+	}
+
+	/**
+	 *  Creates the agents and add them to the agentList.  agents are NOT started.
+	 *@param containerList :Name and container's ref
+	 *@return the agentList
+	 */
+	private static void addAgents(List<AgentController> agentList, HashMap<String, ContainerController> containerList, int nbAgents, String job) {
+		//System.out.println("Launching agents...");
+		ContainerController c;
+
+		//Agent0 on container0
+		c = containerList.get("container0");
+
+		String name = "";
+		switch (job) {
+			case "explorer":
+				name = "Explo";
+				break;
+			case "hunter":
+				name = "Hunter";
+				break;
+		}
+
+		// Ajout des agents
+		int nb = agentList.size() + 1;
+		for (int i = nb ; i <= nb + nbAgents ; i++)
+			createAgent(c, agentList, name + i, job);
+
+		// Ajout du wumpus à l'environnement
+		//createWumpus(c, agentList, "Golem");
+
+		//System.out.println("Agents launched...");
 	}
 
 	/**
