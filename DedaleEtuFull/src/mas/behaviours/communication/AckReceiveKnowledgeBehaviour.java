@@ -33,7 +33,7 @@ public class AckReceiveKnowledgeBehaviour extends SimpleBehaviour {
             }
             catch (Exception e) {
                 e.printStackTrace();
-                //System.out.println("Accusé réception mal écrit");
+                System.out.println("Accusé réception mal écrit");
             }
         }
     }

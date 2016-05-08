@@ -29,7 +29,7 @@ public class SendKnowledgeBehaviour extends SendBehaviour {
 			msg.setProtocol("Knowledge");
 			msg.setContentObject(((AgentExplorateur) this.myAgent).getKnowledge().shareKnowledge(fd.getName().getLocalName()));
 		} catch (IOException e) {
-			//System.out.println("L'envoi a raté gros noeud");
+			System.out.println("L'envoi a raté gros noeud");
 			e.printStackTrace();
 		}
 	}

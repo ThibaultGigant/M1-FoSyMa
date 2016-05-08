@@ -9,10 +9,10 @@ public class Ulysse31MovingAgent extends abstractAgent {
 	}
 	protected void beforeMove(){//Automatically called before doMove()
 		super.beforeMove();
-		//System.out.println("I migrate");
+		System.out.println("I migrate");
 	}
 	protected void afterMove(){//Automatically called after doMove()
 		super.afterMove();
-		//System.out.println("I migrated");
+		System.out.println("I migrated");
 	}
 }

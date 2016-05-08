@@ -42,7 +42,7 @@ public class HunterStrategy implements IStrategy {
 
         // Si l'on n'a plus de place dans notre sac
         if (myAgent.getBackPackFreeSpace() == 0) {
-            //System.out.println(this.myAgent.getLocalName() + " | Fin");
+            System.out.println(this.myAgent.getLocalName() + " | Fin Hunter " + myAgent.getCurQueueSize());
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }
@@ -56,6 +56,7 @@ public class HunterStrategy implements IStrategy {
                         System.out.println(attr.toString());
                         System.out.println("Pick");
                         myAgent.pick();
+                        break;
                     }
 
                 }
@@ -72,7 +73,7 @@ public class HunterStrategy implements IStrategy {
 
         // Si le chemin est vide, c'est qu'on a tout pris
         if (path.isEmpty()) {
-        	//System.out.println(this.myAgent.getLocalName() + " | Fin");
+        	System.out.println(this.myAgent.getLocalName() + " | Fin");
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }

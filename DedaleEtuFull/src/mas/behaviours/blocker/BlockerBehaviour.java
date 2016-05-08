@@ -1,27 +1,21 @@
-package src.mas.behaviours.communication.blocker;
+package src.mas.behaviours.blocker;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import env.Attribute;
 import env.Couple;
 import jade.core.AID;
-import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
-import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-import mas.abstractAgent;
 import src.mas.agents.AgentExplorateur;
 import src.mas.protocols.IProtocol;
 import src.mas.protocols.BlocageProtocol;
-import src.mas.behaviours.communication.blocker.MoveBlock;
-import src.mas.behaviours.communication.blocker.BlocageProcedure;
+import src.mas.behaviours.blocker.MoveBlock;
+import src.mas.behaviours.blocker.BlocageProcedure;
+import src.mas.util.Debug;
 
 public class BlockerBehaviour extends SimpleBehaviour {
 
@@ -68,7 +62,7 @@ public class BlockerBehaviour extends SimpleBehaviour {
 	 */
 	private int state = 0;
 
-	private boolean flagDebug = false;
+	private boolean debugFlag = true;
 
 	public BlockerBehaviour(final mas.abstractAgent myagent, List<String> path) {
 		super(myagent);
@@ -82,8 +76,6 @@ public class BlockerBehaviour extends SimpleBehaviour {
 	@Override
 	public void action() {
 
-		//System.out.println(myAgent.getLocalName() + " " + this.state);
-
 		int flag;
 
 		if (this.state < 3 && findBlocker()) {
@@ -93,45 +85,34 @@ public class BlockerBehaviour extends SimpleBehaviour {
 		switch (this.state) {
 		// Informe son entourage qu'il est bloqué
 		case 0:
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 0");
 			if (this.blockerAgentInfo == null)
 				this.blocageProcedure.Ask();
 
 			this.state = 1;
-			this.myAgent.getLocalName();
 			break;
 
 		// Vérifie si quelqu'un de son entourage indique qu'il est bloqué
 		case 1:
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 1");
 			if (this.blocageProcedure.Answer())
 				this.state = 2;
 			else
 				this.state = 3;
-
-			this.myAgent.getLocalName();
-
 			break;
 
 		// Vérifie si quelqu'un à répondu à son appel
 		case 2:
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 2");
-			if (this.blockerAgentInfo == null)
+			if (this.blockerAgentInfo == null) {
 				this.blockerAgentInfo = this.blocageProcedure.Confirm();
-
-			if (this.blockerAgentInfo != null) {
-				if (!flagDebug)
-					System.out.println(myAgent.getLocalName() + " & " + ((AID)blockerAgentInfo[0]).getLocalName());
-				flagDebug = true;
+				if (this.blockerAgentInfo == null) {
+					this.state = 3;
+					break;
+				}
 			}
-
 			this.state = 0;
-			this.myAgent.getLocalName();
 			break;
 
 		// Determine qui doit laisser passer l'autre
 		case 3:
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 3");
 			// Si on bloque l'agent qui nous bloque
 			if (findBlocker()) {
 				/**
@@ -166,35 +147,31 @@ public class BlockerBehaviour extends SimpleBehaviour {
 
 		// L'agent doit laisser la place à l'autre, puis doit attendre qu'il se soit bien déplacé
 		case 4:
+			Debug.print(myAgent.getLocalName() + " laisse " + ((AID)finalBlockerInfo[0]).getLocalName(), debugFlag);
 			// Si l'on était déjà bloqué auparavant
 			if (!blockers.isEmpty()) {
 				myValue = (float) finalBlockerInfo[3];
 				finalBlockerInfo = blockers.get(blockers.size() - 1);
 				blockers.clear();
-				blockers.add(finalBlockerInfo);
-				blockerAgentInfo = finalBlockerInfo = null;
+				//blockerAgentInfo = finalBlockerInfo = null;
 				path.clear();
-				path.add((String)(blockers.get(0)[1]));
+				path.add((String)finalBlockerInfo[1]);
 				state = 0;
 			}
 
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 4");
-			//System.out.println(this.myAgent.getLocalName() + " | 4");
 			// Si on n'a pas encore laissé la place
 			if (((mas.abstractAgent)this.myAgent).getCurrentPosition().equals(this.myPosition)) {
-				//System.out.println(this.myAgent.getLocalName() + " | TryToMove");
 				flag = this.moveBlock.tryToMove();
+				Debug.print(myAgent.getLocalName() + " essaie de bouger", debugFlag);
+				if (flag == 1) {
+				}
 				// Nombre d'essaie limite atteint
 				if (flag == -1) {
-					// TODO Boucler le blocage
 					boucler();
-					//this.path.clear();
-					//finish();
 				}
 			}
 			// Si l'on doit attendre que l'autre se déplace
 			else {
-				//System.out.println(this.myAgent.getLocalName() + " | WaitOtherToMove");
 				flag = moveBlock.waitOtherToMove();
 				// La voie est libre
 				if (flag == 1) {
@@ -203,7 +180,6 @@ public class BlockerBehaviour extends SimpleBehaviour {
 				}
 				// Nombre d'essaie limite atteint
 				else if (flag == -1) {
-					// TODO
 					casesToAvoid.add(path.get(0));
 					path.clear();
 					finish();
@@ -213,13 +189,15 @@ public class BlockerBehaviour extends SimpleBehaviour {
 
 		// L'agent attend que l'autre lui laisse la place
 		case 5:
-			//System.out.println(this.myAgent.getLocalName() + " | 5");
+			Debug.print(myAgent.getLocalName() + " passe devant " + ((AID)finalBlockerInfo[0]).getLocalName(), debugFlag);
 			flag = this.moveBlock.waitToMove();
 			// Débloqué
 			if (flag == 1) {
 				this.path.remove(0);
+				// Si c'est notre premier blocage
 				if (blockers.isEmpty())
 					finish();
+				// Si l'on bloquait déjà quelqu'un
 				else {
 					blockerAgentInfo = finalBlockerInfo = blockers.get(blockers.size()-1);
 					blockers.clear();
@@ -236,22 +214,21 @@ public class BlockerBehaviour extends SimpleBehaviour {
 
 		// En cas d'égalité, procédure de choix aléatoire
 		case 6:
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 6");
 			flag = moveBlock.whoWin();
 			switch (flag) {
 			// Gagné
 			case 1:
-				//System.out.println(myAgent.getLocalName() + " GG");
+				Debug.print(myAgent.getLocalName() + " VS " + ((AID)finalBlockerInfo[0]).getLocalName(), debugFlag);
 				this.state = 5;
 				break;
 			// Egalité
 			case 0:
-				//System.out.println(myAgent.getLocalName() + " DRAW");
+				Debug.print(myAgent.getLocalName() + " VS " + ((AID)finalBlockerInfo[0]).getLocalName(), debugFlag);
 				this.moveBlock.shiFuMi();
 				break;
 			// Perdu
 			case -1:
-				//System.out.println(myAgent.getLocalName() + " LOSE");
+				Debug.print(myAgent.getLocalName() + " VS " + ((AID)finalBlockerInfo[0]).getLocalName(), debugFlag);
 				this.state = 4;
 				break;
 			// Pas de message reçu
@@ -259,7 +236,6 @@ public class BlockerBehaviour extends SimpleBehaviour {
 				break;
 			// Nombre d'essaie limite atteinte
 			case -3:
-				//System.out.println(myAgent.getLocalName() + " LIM");
 				this.casesToAvoid.add(this.path.get(0));
 				this.path.clear();
 				finish();
@@ -270,31 +246,35 @@ public class BlockerBehaviour extends SimpleBehaviour {
 		// Cas ou l'on ne bloque pas l'agent qui nous bloque
 		// On se rabat sur l'un des agents que l'on bloque
 		case 7:
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 7");
-			Object[] min = this.othersAgentInfo.get(0);
+			Object[] max = this.othersAgentInfo.get(0);
 
 			// Choix de l'agent à qui répondre
 			for (Object[] other : this.othersAgentInfo) {
-				if ((float) min[3] > (float) other[3])
-					min = other;
+				if ((float) max[3] < (float) other[3])
+					max = other;
 			}
 
-			this.finalBlockerInfo = min;
+			this.finalBlockerInfo = max;
+			Debug.print(myAgent.getLocalName() + " se rabat sur " + ((AID)finalBlockerInfo[0]).getLocalName(), debugFlag);
 			this.moveBlock.setOther((AID)this.finalBlockerInfo[0], (List<String>)this.finalBlockerInfo[2]);
-			//System.out.println(this.myAgent.getAID().getLocalName() + " bloque " + ((AID) this.finalBlockerInfo[0]).getLocalName() + " | noFind");
 
 			// Si un agent nous a répondu après coup, on négocie avec
 			this.blockerAgentInfo = this.blocageProcedure.Confirm(true);
 			if (this.blockerAgentInfo != null) {
-				//System.out.println(myAgent.getLocalName() + " --------------------------- Timon ---------------------------");
+				Debug.print(myAgent.getLocalName() + " --------------------------- Timon ---------------------------", debugFlag);
 				this.finalBlockerInfo = this.blockerAgentInfo;
 				this.moveBlock.setOther((AID)this.finalBlockerInfo[0], (List<String>)this.finalBlockerInfo[2]);
 			}
-			// Sinon on essaie de négocier avec un autre
+			// Sinon on voit si l'on doit en laisser passer un autre
 			else {
-				// Sert pour le prochain appel à "negociation"
-				this.blockerAgentInfo = this.finalBlockerInfo;
-				this.blocageProcedure.AnswerAfter(this.finalBlockerInfo);
+				// On le laisse passer seulement s'il à la priorité
+				if ((float) finalBlockerInfo[3] >= myValue) {
+					Debug.print(myAgent.getLocalName() + " evite cycle avec " + ((AID)finalBlockerInfo[0]).getLocalName(), debugFlag);
+					this.blockerAgentInfo = this.finalBlockerInfo;
+					this.blocageProcedure.AnswerAfter(this.finalBlockerInfo);
+					state = 4;
+					break;
+				}
 			}
 
 			// Cet agent à la priorité
@@ -307,20 +287,6 @@ public class BlockerBehaviour extends SimpleBehaviour {
 			else
 				this.state = 6;
 
-			break;
-		// Cas ou l'on ne bloque pas l'agent qui nous bloque
-		// Confirmation
-		case 8:
-			//System.out.println(this.myAgent.getAID().getLocalName() + " | 8");
-			// Cet agent à la priorité
-			if ((float) this.finalBlockerInfo[3] < this.myValue)
-				this.state = 5;
-				// Cet agent doit céder le passage
-			else if ((float) this.finalBlockerInfo[3] > this.myValue)
-				this.state = 4;
-				// Egalité, choisir aléatoirement
-			else
-				this.state = 6;
 			break;
 		}
 
@@ -349,17 +315,14 @@ public class BlockerBehaviour extends SimpleBehaviour {
 			return 0;
 		}
 		else if (diff > 0f) {
-			//System.out.println(diff);
 			return 1;
 		}
 		return -1;
 	}
 
 	private void negociation() {
-		System.out.println(myAgent.getLocalName() + " Find Blocker");
 		this.finalBlockerInfo = this.blockerAgentInfo;
 		this.moveBlock.setOther((AID)this.finalBlockerInfo[0], (List<String>)this.finalBlockerInfo[2]);
-		//System.out.println(this.myAgent.getAID().getLocalName() + " bloque " + ((AID) this.finalBlockerInfo[0]).getLocalName() + " | Find");
 
 		int flag = hasPriorite();
 
@@ -373,7 +336,6 @@ public class BlockerBehaviour extends SimpleBehaviour {
 
 			// Choisir aléatoirement
 		else {
-			//System.out.println(this.myAgent.getLocalName() + " | ----------------------------- Timon -----------------------------");
 			this.moveBlock.shiFuMi();
 			this.state = 6;
 		}
@@ -403,8 +365,6 @@ public class BlockerBehaviour extends SimpleBehaviour {
 				break;
 		}
 
-		//System.out.println(this.myAgent.getLocalName() + "|  Valeur : " + puce * result);
-
 		return puce*result;
 	}
 
@@ -419,7 +379,7 @@ public class BlockerBehaviour extends SimpleBehaviour {
 		// entré en conflit
 		Object[] max = blockers.get(0);
 		for (Object[] blocker : blockers) {
-			if ((float) blocker[3] > (float)max[3])
+			if ((float) blocker[3] > (float)max[3] && !((AID)max[0]).equals((AID)finalBlockerInfo[0]))
 				max = blocker;
 		}
 
@@ -467,10 +427,14 @@ public class BlockerBehaviour extends SimpleBehaviour {
 			}
 			this.path.clear();
 			this.path.add((String)min[1]);
+			moveBlock.setPath(path);
+			Debug.print(myAgent.getLocalName() + " set Path", debugFlag);
 		}
 
 		blockerAgentInfo = null;
 		finalBlockerInfo = null;
+
+		Debug.print(myAgent.getLocalName() + " boucle", debugFlag);
 
 		state = 0;
 
@@ -481,7 +445,6 @@ public class BlockerBehaviour extends SimpleBehaviour {
 		MessageTemplate msgTemplate = MessageTemplate.MatchProtocol("BlocageProtocol");
 
 		// Récupération du message
-		//System.out.println(this.myAgent);
 		ACLMessage msg = this.myAgent.receive(msgTemplate);
 		if (msg != null)
 			return true;

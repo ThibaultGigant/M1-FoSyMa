@@ -1,4 +1,4 @@
-package src.mas.behaviours.communication.blocker;
+package src.mas.behaviours.blocker;
 
 
 import java.io.IOException;
@@ -43,6 +43,10 @@ public class MoveBlock {
         this.otherPath = otherPath;
         this.otherAgent = otherAgent;
         this.places = this.myAgent.observe();
+    }
+
+    public void setPath(List<String> path) {
+        this.path = path;
     }
 
     public void setOther(AID otherAgent, List<String> otherPath) {
@@ -172,6 +176,8 @@ public class MoveBlock {
         message.setProtocol("BlocageProtocol");
         message.addReceiver(otherAgent);
         message.setSender(this.myAgent.getAID());
+
+        //System.out.println(myAgent.getLocalName() + " joue vs " + otherAgent.getLocalName());
 
         this.float_ShiFuMi = (new Random()).nextFloat();
 

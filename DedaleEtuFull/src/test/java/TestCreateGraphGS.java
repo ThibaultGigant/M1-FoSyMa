@@ -42,7 +42,7 @@ public class TestCreateGraphGS {
 		n.setAttribute("ui.class", "agent");
 		
 		Object o=n.getAttribute("ui.label");
-		//System.out.println("object: "+o.toString());
+		System.out.println("object: "+o.toString());
 		
 		graph.addNode("B");
 		n= graph.getNode("B");

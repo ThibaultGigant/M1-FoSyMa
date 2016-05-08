@@ -128,7 +128,6 @@ public class GraphTools {
                     List<Attribute> attr = tempNode.getAttribute("contenu");
                     for (Attribute attribute : attr) {
                         if (attribute.equals(Attribute.TREASURE)) {
-                            System.out.println("TREASURE");
                             treasures.put(tempNode.getId(), (Integer) attribute.getValue());
                             break;
                         }
@@ -137,8 +136,9 @@ public class GraphTools {
             }
         }
 
-        if (treasures.isEmpty())
+        if (treasures.isEmpty()) {
             return pathToTarget(currentPosition, graph, "visited", casesToAvoid);
+        }
 
         // Calculer la distance à chaque trésor
         for (String treasurePlace : treasures.keySet())

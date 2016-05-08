@@ -30,14 +30,12 @@ public class ExplorationProtocol extends AbstractProtocol {
         behaviours.add(new SendKnowledgeBehaviour(myAgent, 500));
         behaviours.add(new ReceiveKnowledgeBehaviour(myAgent));
         behaviours.add(new AckReceiveKnowledgeBehaviour(myAgent));
-        //System.out.println("----------------------------" + behaviours);
 
         behaviours.forEach(myAgent::addBehaviour);
     }
 
     @Override
     public void setPath(List<String> path) {
-        //System.out.println("Path -----------------");
         this.strategy.setPath(path);
     }
 

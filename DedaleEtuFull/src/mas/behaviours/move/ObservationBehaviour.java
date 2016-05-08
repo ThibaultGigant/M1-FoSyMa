@@ -38,6 +38,6 @@ public class ObservationBehaviour extends TickerBehaviour {
 		((AgentExplorateur) this.myAgent).updateKnowledge(lobs);
 
 
-		// //System.out.println("Agent " + this.myAgent.getLocalName() + " observes around position: " + ((AgentExplorateur) this.myAgent).getCurrentPosition());
+		// System.out.println("Agent " + this.myAgent.getLocalName() + " observes around position: " + ((AgentExplorateur) this.myAgent).getCurrentPosition());
 	}
 }

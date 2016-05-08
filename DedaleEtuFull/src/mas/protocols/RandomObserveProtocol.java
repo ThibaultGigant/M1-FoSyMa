@@ -17,7 +17,6 @@ public class RandomObserveProtocol extends AbstractProtocol {
         MoveBehaviour moveBehaviour = new MoveBehaviour(myAgent, 500, strategy);
 
         behaviours.add(new ObservationBehaviour(myAgent, 900));
-        //behaviours.add(new RandomWalkBehaviour(myAgent));
         behaviours.add(moveBehaviour);
         behaviours.forEach(myAgent::addBehaviour);
     }

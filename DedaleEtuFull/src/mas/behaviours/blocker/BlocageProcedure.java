@@ -1,4 +1,4 @@
-package src.mas.behaviours.communication.blocker;
+package src.mas.behaviours.blocker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import jade.lang.acl.MessageTemplate;
 
 import mas.abstractAgent;
 import src.mas.agents.AgentExplorateur;
+import src.mas.util.Debug;
 
 /**
  * Created by Fayçal on 06/05/2016.
@@ -25,6 +26,8 @@ public class BlocageProcedure {
     private List<Object[]> othersAgentInfo = new ArrayList<Object[]>();
     private int counter = 0;
     private int maxTry = 10;
+
+    private boolean debugFlag = true;
 
     public BlocageProcedure(abstractAgent myAgent, List<String> path, List<Object[]> othersAgentInfo) {
         this.myAgent = myAgent;
@@ -39,9 +42,12 @@ public class BlocageProcedure {
 
         if (this.myAgent.getCurrentPosition() != "") {
             DFAgentDescription dfd = new DFAgentDescription();
-            ServiceDescription sd  = new ServiceDescription();
-            sd.setType( "explorer" ); // TODO to change ?
-            dfd.addServices(sd);
+            /*ServiceDescription sd_explorer  = new ServiceDescription();
+            sd_explorer.setType( "explorer" );
+            dfd.addServices(sd_explorer);
+            ServiceDescription sd_hunter = new ServiceDescription();
+            sd_hunter.setType( "hunter" );
+            dfd.addServices(sd_hunter);*/
 
             DFAgentDescription[] result = {};
             try {
@@ -104,7 +110,8 @@ public class BlocageProcedure {
                     }
 
                     // Stock les données concernant l'autre agent qui est bloqué cet agent
-                    this.othersAgentInfo.add(data);
+                    if (!othersAgentInfo.contains(data))
+                        this.othersAgentInfo.add(data);
 
                     // Création du message de confirmation
                     ACLMessage accuseReception = new ACLMessage(ACLMessage.CONFIRM);
@@ -119,11 +126,12 @@ public class BlocageProcedure {
 
                     // Envoie du message
                     this.myAgent.sendMessage(accuseReception);
+                    Debug.print(myAgent.getLocalName() + " Answer to " + msg.getSender().getLocalName(), debugFlag);
                 }
             }
             catch (Exception e) {
                 e.printStackTrace();
-                //System.out.println("Message reception failed");
+                System.out.println("Message reception failed");
             }
         }
         return (this.counter < this.maxTry);
@@ -152,8 +160,8 @@ public class BlocageProcedure {
 
     public Object[] Confirm(boolean flag) {
         String after = "";
-        if (flag)
-            after = " | After";
+        //if (flag)
+            //after = " | After";
 
         // Description du message à lire
         final MessageTemplate msgTemplate = MessageTemplate.and(
@@ -182,12 +190,15 @@ public class BlocageProcedure {
 
                     // Confirmation reçu
                     // Stock les données concernant l'autre agent qui bloque cet agent
+                    if (flag)
+                        System.out.println("Pumba");
+                    Debug.print(myAgent.getLocalName() + " found " + senderIAD.getLocalName(), debugFlag);
                     return data;
                 }
             }
             catch (Exception e) {
                 e.printStackTrace();
-                //System.out.println("Message reception failed");
+                System.out.println("Message reception failed");
             }
         }
         // Confirmation non reçu
@@ -197,7 +208,7 @@ public class BlocageProcedure {
     public void AnswerAfter(Object[] other) {
         // Création du message de confirmation
         ACLMessage accuseReception = new ACLMessage(ACLMessage.CONFIRM);
-        accuseReception.setProtocol("BlocageProtocol | After");
+        accuseReception.setProtocol("BlocageProtocol");// | After");
         accuseReception.addReceiver((AID) other[0]);
         accuseReception.setSender(this.myAgent.getAID());
 
@@ -210,6 +221,7 @@ public class BlocageProcedure {
         }
 
         ((abstractAgent) this.myAgent).sendMessage(accuseReception);
+        Debug.print(myAgent.getLocalName() + " Answer After to " + ((AID)other[0]).getLocalName(), debugFlag);
     }
 
     private float valuation() {
@@ -235,8 +247,6 @@ public class BlocageProcedure {
                 puce = -1;
                 break;
         }
-
-        //System.out.println(this.myAgent.getLocalName() + "|  Valeur : " + puce * result);
 
         return puce*result;
     }

@@ -43,7 +43,7 @@ public class DummyExploAgent extends abstractAgent{
 		addBehaviour(new RandomWalkBehaviour(this));
 		addBehaviour(new SayHello(this));
 
-		//System.out.println("the agent "+this.getLocalName()+ " is started");
+		System.out.println("the agent "+this.getLocalName()+ " is started");
 
 	}
 

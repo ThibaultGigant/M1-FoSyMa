@@ -3,8 +3,8 @@ package src.mas.protocols;
 import java.util.List;
 
 import mas.abstractAgent;
-//import src.mas.behaviours.communication.blocker.AnswerBlockerBehaviour;
-import src.mas.behaviours.communication.blocker.BlockerBehaviour;
+//import src.mas.behaviours.blocker.AnswerBlockerBehaviour;
+import src.mas.behaviours.blocker.BlockerBehaviour;
 //import src.mas.behaviours.move.MoveBehaviour;
 //import src.mas.strategies.StopStrategy;
 
@@ -41,7 +41,6 @@ public class BlocageProtocol extends AbstractProtocol {
 
     @Override
     public void addBehaviours(abstractAgent myAgent) {
-        //System.out.println(myAgent.getLocalName() + " | Blocage");
         behaviours.add(new BlockerBehaviour(myAgent, path));
         
         behaviours.forEach(myAgent::addBehaviour);

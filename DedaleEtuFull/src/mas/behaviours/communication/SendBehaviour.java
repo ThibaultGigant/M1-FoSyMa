@@ -42,12 +42,7 @@ public abstract class SendBehaviour extends TickerBehaviour {
 			try {
 				result = DFService.search(this.myAgent, dfd);
 			} catch (FIPAException e1) { e1.printStackTrace(); }
-			            
-			//System.out.println(result.length + " results" );
-			
-			//if (result.length>0)
-				//System.out.println(" " + result[0].getName() );
-			
+
 			
 			for (DFAgentDescription fd : result) {
 				

@@ -37,8 +37,5 @@ public class MoveBehaviour extends TickerBehaviour {
         List<Couple<String, List<Attribute>>> lobs=((mas.abstractAgent)this.myAgent).observe();
         // Mise à jour de ces observations dans les connaissances de l'agent
         ((AgentExplorateur) this.myAgent).updateKnowledge(lobs);
-
-
-        // //System.out.println("Agent " + this.myAgent.getLocalName() + " observes around position: " + ((AgentExplorateur) this.myAgent).getCurrentPosition());
     }
 }

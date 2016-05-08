@@ -46,13 +46,19 @@ public class ExploreStrategy implements IStrategy {
 
         // Si le chemin est vide, c'est qu'on a tout visité
         if (path.isEmpty()) {
-        	//System.out.println(this.myAgent.getLocalName() + " | Fin");
+        	System.out.println(this.myAgent.getLocalName() + " | Fin");
             //((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             ((AgentExplorateur) this.myAgent).setProtocol(new HunterProtocol());
             return false;
         }
         // Sinon on va au prochain point sur le chemin
         else {
+            // On y va seulement s'il est toujours considéré comme "visited" (updateKnowledge entre temps ?)
+            if (!knowledge.getNode(path.get(path.size() - 1)).hasAttribute("visited")) {
+                path.clear();
+                return true;
+            }
+
         	destination = path.get(0);
         	if (this.myAgent.moveTo(destination)) {
         		countBlocage = 0;
