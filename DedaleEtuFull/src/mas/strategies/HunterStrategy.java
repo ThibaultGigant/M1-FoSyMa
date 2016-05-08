@@ -4,13 +4,16 @@ import env.Attribute;
 import env.Couple;
 import mas.abstractAgent;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.w3c.dom.Attr;
 import mas.agents.AgentExplorateur;
 import mas.protocols.BlocageProtocol;
 import mas.protocols.RandomObserveProtocol;
 import mas.util.GraphTools;
+import mas.util.noWumpus;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,26 +39,50 @@ public class HunterStrategy implements IStrategy {
     private int countBlocage = 0;
     private int maxBlocage = 10;
 
+    private String lastPlace = "";
+
     @Override
     public boolean moveTo(Graph knowledge) {
         String destination;
 
         // Si l'on n'a plus de place dans notre sac
         if (myAgent.getBackPackFreeSpace() == 0) {
-            System.out.println(this.myAgent.getLocalName() + " | Fin Hunter " + myAgent.getCurQueueSize());
+            System.out.println(this.myAgent.getLocalName() + " | Fin Hunter ");
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }
 
+        // Si l'on est sur une case dangereuse
+        if (lastPlace != "" && noWumpus.isWumpus(knowledge, myAgent.getCurrentPosition())) {
+            String tmp = myAgent.getCurrentPosition();
+            if (this.myAgent.moveTo(lastPlace)) {
+                lastPlace = "";
+                countBlocage = 0;
+                path.clear();
+                return true;
+            }
+            else {
+                countBlocage++;
+            }
+
+            if (countBlocage >= maxBlocage) {
+                ((AgentExplorateur) this.myAgent)
+                        .setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
+            }
+
+            return true;
+        }
+
         // Récupération du chemin
         if (path.isEmpty()) {
-            // Si l'on a atteint
+            // Si l'on a atteint notre objectif
             if (myAgent.getCurrentPosition().equals(treasureToPurchase)) {
                 for (Attribute attr : ((List< Attribute>) knowledge.getNode(myAgent.getCurrentPosition()).getAttribute("contenu"))) {
                     if (attr.equals(Attribute.TREASURE) && (Integer) attr.getValue() > 0 ) {
-                        System.out.println(attr.toString());
-                        System.out.println("Pick");
+                        int tic = myAgent.getBackPackFreeSpace();
                         myAgent.pick();
+                        int tac = myAgent.getBackPackFreeSpace();
+                        System.out.println(myAgent.getLocalName() + " Pick " + (tic - tac) );
                         break;
                     }
 
@@ -73,14 +100,17 @@ public class HunterStrategy implements IStrategy {
 
         // Si le chemin est vide, c'est qu'on a tout pris
         if (path.isEmpty()) {
-        	System.out.println(this.myAgent.getLocalName() + " | Fin");
+        	System.out.println(this.myAgent.getLocalName() + " | Fin Hunter");
             ((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             return false;
         }
         // Sinon on va au prochain point sur le chemin
         else {
+            casesToAvoid.clear();
         	destination = path.get(0);
+            String tmp = myAgent.getCurrentPosition();
         	if (this.myAgent.moveTo(destination)) {
+                lastPlace = tmp;
         		countBlocage = 0;
         		path.remove(0);
         	}
@@ -90,18 +120,8 @@ public class HunterStrategy implements IStrategy {
         }
         
         if (countBlocage >= maxBlocage) {
-        	// TODO
         	((AgentExplorateur) this.myAgent)
         					.setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
-            /*
-        	List<Couple<String,List<Attribute>>> lobs=(this.myAgent).observe();//myPosition
-            //Random move from the current position
-            Random r= new Random();
-            int moveId=r.nextInt(lobs.size());
-
-            //The move action (if any) should be the last action of your behaviour
-            (this.myAgent).moveTo(lobs.get(moveId).getLeft());
-            */
         }
         
         return true;

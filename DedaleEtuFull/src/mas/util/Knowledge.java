@@ -171,13 +171,14 @@ public class Knowledge implements Serializable {
                 }
                 /* Le problème venait de là, c'est incompréhensible, il faut absolument laisser le "else"... */
                 else {
-                    // Ajout des attributs associés au noeud
+                    /*
                     for (Attribute a : attr) {
-                        if (a.equals(Attribute.TREASURE) && (Integer) a.getValue() == 0) {
+                        if (n.getId().equals(myAgent.getCurrentPosition()) && a.equals(Attribute.TREASURE) && (Integer) a.getValue() == 0) {
                             attr.remove(a);
                             break;
                         }
-                    }
+                    }*/
+                    // Ajout des attributs associés au noeud
                     n.setAttribute("contenu", attr);
                 }
             }
@@ -190,21 +191,27 @@ public class Knowledge implements Serializable {
                 if (!n.getId().equals(currentNode)) {
                     n.addAttribute("visited", "false");
                 }
-            }
 
-            if (!n.getId().equals(currentNode)) {
+                if (!n.getId().equals(currentNode)) {
 
-                // Ajout de l'arête entre le noeud courant et le noeud observé.
-                try {
-                    this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
-                } catch (Exception e) {
-                    continue;
+                    // Ajout de l'arête entre le noeud courant et le noeud observé.
+                    try {
+                        this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
+                    } catch (Exception e) {
+                        continue;
+                    }
                 }
+
             }
+
+
 
             if (attr.contains(Attribute.TREASURE)) {
                 n.setAttribute("ui.class", "treasure");
                 n.setAttribute("ui.label", "treasure" + n.getId());
+            }
+            else if (attr.contains(Attribute.WIND)) {
+                n.setAttribute("ui.class", "wind");
             }
             else if (attr.contains(Attribute.WUMPUS)) {
                 n.setAttribute("ui.class", "wumpus");
@@ -212,7 +219,8 @@ public class Knowledge implements Serializable {
             }
             else if (attr.contains(Attribute.HOWL) || attr.contains(Attribute.STENCH)) {
                 n.setAttribute("ui.class", "stench");
-                n.setAttribute("visited", "true");
+                //n.setAttribute("visited", "true");
+                //n.setAttribute("visited", "false"); // Les Wumpus ne tuent pas, nous pouvons donc aller sur ces cases.
             }
             else if (((String) n.getAttribute("visited")).equals("false")) {
                 n.setAttribute("ui.class", "unvisited");
@@ -229,6 +237,9 @@ public class Knowledge implements Serializable {
         List<Attribute> attributes = this.currentPosition.getAttribute("contenu");
         if (attributes.contains(Attribute.WUMPUS)) {
             this.currentPosition.setAttribute("ui.class", "wumpus");
+        }
+        else if (attributes.contains(Attribute.WIND)) {
+            this.currentPosition.setAttribute("ui.class", "wind");
         }
         else if (attributes.contains(Attribute.HOWL)
                 || attributes.contains(Attribute.STENCH)) {

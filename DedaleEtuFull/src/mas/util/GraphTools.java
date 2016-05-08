@@ -12,6 +12,8 @@ import java.util.List;
 
 import mas.util.Debug;
 import mas.util.TreasureTargeted;
+import mas.util.noWumpus;
+import org.w3c.dom.Attr;
 
 /**
  * Classe permettant d'effectuer certaines actions courantes nécessaires au projet sur des graphes
@@ -72,13 +74,17 @@ public class GraphTools {
             nodes.remove(0);
             while (nodeIterator.hasNext()) {
                 tempNode = nodeIterator.next();
-                if (!peres.containsKey(tempNode.getId()) && !nodesToAvoid.contains(tempNode)) {
-                    peres.put(tempNode.getId(), pere.getId());
-                    if (tempNode.hasAttribute(stopCriterion) && tempNode.getAttribute(stopCriterion).equals(valueOfStopCriterion)) {
-                        found = true;
-                        break;
+                if (!peres.containsKey(tempNode.getId()) && !nodesToAvoid.contains(tempNode)) {// && !noWumpus.isWumpus(graph, tempNode.getId())) {
+                    // On accepte d'aller sur un case dangereuse si elle n'a pas encore été découverte
+                    // Mais nous ne laissons pas un agent traverser une telle case pour en atteindre une autre
+                    if ((tempNode.hasAttribute(stopCriterion) && tempNode.getAttribute(stopCriterion).equals(valueOfStopCriterion)) || !noWumpus.isWumpus(graph, tempNode.getId())) {
+                        peres.put(tempNode.getId(), pere.getId());
+                        if (tempNode.hasAttribute(stopCriterion) && tempNode.getAttribute(stopCriterion).equals(valueOfStopCriterion)) {
+                            found = true;
+                            break;
+                        }
+                        nodes.add(tempNode.getId());
                     }
-                    nodes.add(tempNode.getId());
                 }
             }
         }
@@ -143,7 +149,7 @@ public class GraphTools {
             nodes.remove(0);
             while (nodeIterator.hasNext()) {
                 tempNode = nodeIterator.next();
-                if (!peres.containsKey(tempNode.getId()) && !nodesToAvoid.contains(tempNode)) {
+                if (!peres.containsKey(tempNode.getId()) && !nodesToAvoid.contains(tempNode)) {// && noWumpus.isWumpus(graph, tempNode.getId())) {
                     peres.put(tempNode.getId(), pere.getId());
                     nodes.add(tempNode.getId());
 

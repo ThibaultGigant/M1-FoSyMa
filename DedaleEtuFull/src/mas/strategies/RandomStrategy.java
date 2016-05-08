@@ -4,12 +4,15 @@ import mas.abstractAgent;
 import org.graphstream.graph.Graph;
 import mas.agents.AgentExplorateur;
 import mas.protocols.BlocageProtocol;
+import mas.util.noWumpus;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import env.Attribute;
 import env.Couple;
+import org.graphstream.graph.Node;
 
 import java.util.Random;
 
@@ -39,6 +42,10 @@ public class RandomStrategy implements IStrategy {
         int moveId=r.nextInt(lobs.size());
 
         destination = lobs.get(moveId).getLeft();
+
+        if (noWumpus.isWumpus(knowledge, destination)) {
+            return false;
+        }
 
         if (this.myAgent.moveTo(destination)) {
             countBlocage = 0;

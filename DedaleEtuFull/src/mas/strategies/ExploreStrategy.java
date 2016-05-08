@@ -8,11 +8,14 @@ import mas.protocols.BlocageProtocol;
 import mas.protocols.RandomObserveProtocol;
 import mas.protocols.HunterProtocol;
 import mas.util.GraphTools;
+import mas.util.noWumpus;
 
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.junit.Assert;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,15 +36,44 @@ public class ExploreStrategy implements IStrategy {
     private List<String> casesToAvoid = new ArrayList<String>();
     private int countBlocage = 0;
     private int maxBlocage = 10;
+    private String lastPlace = "";
 
     @Override
     public boolean moveTo(Graph knowledge) {
         String destination;
 
+        // Si l'on est sur une case dangereuse
+        if (lastPlace != "" && noWumpus.isWumpus(knowledge, myAgent.getCurrentPosition())) {
+            String tmp = myAgent.getCurrentPosition();
+            path.clear();
+            path.add(lastPlace);
+            System.out.println("la");
+            lastPlace = "";
+            if (this.myAgent.moveTo(lastPlace)) {
+                lastPlace = "";
+                countBlocage = 0;
+                path.clear();
+                return true;
+            }
+            else {
+                countBlocage++;
+            }
+
+            if (countBlocage >= maxBlocage) {
+                System.out.println("isWumpus");
+                ((AgentExplorateur) this.myAgent)
+                        .setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
+            }
+
+            return true;
+        }
+
         // Récupération du chemin
         if (path.isEmpty()) {
             path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", "false", casesToAvoid);
-            casesToAvoid.clear();
+            if (!path.isEmpty())
+                casesToAvoid.clear();
+
         }
 
         // Si le chemin est vide, c'est qu'on a tout visité
@@ -60,7 +92,9 @@ public class ExploreStrategy implements IStrategy {
             }
 
         	destination = path.get(0);
+            String tmp = myAgent.getCurrentPosition();
         	if (this.myAgent.moveTo(destination)) {
+                lastPlace = tmp;
         		countBlocage = 0;
         		path.remove(0);
         	}
@@ -70,18 +104,8 @@ public class ExploreStrategy implements IStrategy {
         }
         
         if (countBlocage >= maxBlocage) {
-        	// TODO
         	((AgentExplorateur) this.myAgent)
         					.setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
-            /*
-        	List<Couple<String,List<Attribute>>> lobs=(this.myAgent).observe();//myPosition
-            //Random move from the current position
-            Random r= new Random();
-            int moveId=r.nextInt(lobs.size());
-
-            //The move action (if any) should be the last action of your behaviour
-            (this.myAgent).moveTo(lobs.get(moveId).getLeft());
-            */
         }
         
         return true;
