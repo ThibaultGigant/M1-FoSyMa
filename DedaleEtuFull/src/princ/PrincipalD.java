@@ -11,11 +11,11 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import src.mas.agents.AgentExplorateur;
-import src.mas.agents.DummyExploAgent;
+import mas.agents.AgentExplorateur;
+import mas.agents.DummyExploAgent;
 import mas.agents.DummyMigrationAgent;
-import src.mas.agents.MigratingAgentExplorateur;
-import src.mas.agents.Ulysse31MovingAgent;
+import mas.agents.MigratingAgentExplorateur;
+import mas.agents.Ulysse31MovingAgent;
 import mas.agents.DummyWumpusAgent;
 import mas.agents.GateKeeperAgent;
 

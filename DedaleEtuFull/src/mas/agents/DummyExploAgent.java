@@ -1,11 +1,11 @@
-package src.mas.agents;
+package mas.agents;
 
 
 import env.Environment;
 
 import mas.abstractAgent;
-import src.mas.behaviours.communication.SayHello;
-import src.mas.behaviours.move.RandomWalkBehaviour;
+import mas.behaviours.communication.SayHello;
+import mas.behaviours.move.RandomWalkBehaviour;
 
 
 public class DummyExploAgent extends abstractAgent{

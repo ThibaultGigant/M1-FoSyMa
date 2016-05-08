@@ -1,4 +1,4 @@
-package src.mas.behaviours.blocker;
+package mas.behaviours.blocker;
 
 
 import java.io.IOException;
@@ -13,8 +13,8 @@ import jade.lang.acl.MessageTemplate;
 
 import jade.lang.acl.UnreadableException;
 import mas.abstractAgent;
-import src.mas.agents.AgentExplorateur;
-import src.mas.protocols.BlocageProtocol;
+import mas.agents.AgentExplorateur;
+import mas.protocols.BlocageProtocol;
 
 /**
  * Created by Tigig on 09/03/2016.

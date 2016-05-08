@@ -1,13 +1,13 @@
-package src.mas.strategies;
+package mas.strategies;
 
 import env.Attribute;
 import env.Couple;
 import mas.abstractAgent;
-import src.mas.agents.AgentExplorateur;
-import src.mas.protocols.BlocageProtocol;
-import src.mas.protocols.RandomObserveProtocol;
-import src.mas.protocols.HunterProtocol;
-import src.mas.util.GraphTools;
+import mas.agents.AgentExplorateur;
+import mas.protocols.BlocageProtocol;
+import mas.protocols.RandomObserveProtocol;
+import mas.protocols.HunterProtocol;
+import mas.util.GraphTools;
 
 import org.graphstream.graph.Graph;
 import org.junit.Assert;

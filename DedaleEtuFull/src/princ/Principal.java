@@ -11,7 +11,7 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import src.mas.agents.DummyExploAgent;
+import mas.agents.DummyExploAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;

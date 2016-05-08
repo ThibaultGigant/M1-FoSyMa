@@ -1,10 +1,10 @@
-package src.mas.behaviours.move;
+package mas.behaviours.move;
 
 import env.Attribute;
 import env.Couple;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
-import src.mas.agents.AgentExplorateur;
+import mas.agents.AgentExplorateur;
 import java.util.List;
 
 /**

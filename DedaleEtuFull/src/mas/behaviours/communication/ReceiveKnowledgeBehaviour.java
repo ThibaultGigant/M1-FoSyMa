@@ -1,11 +1,11 @@
-package src.mas.behaviours.communication;
+package mas.behaviours.communication;
 
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import src.mas.agents.AgentExplorateur;
+import mas.agents.AgentExplorateur;
 
 import java.io.IOException;
 import java.util.Date;

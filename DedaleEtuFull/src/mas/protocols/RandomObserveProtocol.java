@@ -1,9 +1,9 @@
-package src.mas.protocols;
+package mas.protocols;
 
-import src.mas.behaviours.move.ObservationBehaviour;
-import src.mas.behaviours.move.RandomWalkBehaviour;
-import src.mas.behaviours.move.MoveBehaviour;
-import src.mas.strategies.RandomStrategy;
+import mas.behaviours.move.ObservationBehaviour;
+import mas.behaviours.move.RandomWalkBehaviour;
+import mas.behaviours.move.MoveBehaviour;
+import mas.strategies.RandomStrategy;
 
 /**
  * Created by Tigig on 14/02/2016.

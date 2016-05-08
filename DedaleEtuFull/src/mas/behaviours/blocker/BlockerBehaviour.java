@@ -1,4 +1,4 @@
-package src.mas.behaviours.blocker;
+package mas.behaviours.blocker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,12 @@ import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
-import src.mas.agents.AgentExplorateur;
-import src.mas.protocols.IProtocol;
-import src.mas.protocols.BlocageProtocol;
-import src.mas.behaviours.blocker.MoveBlock;
-import src.mas.behaviours.blocker.BlocageProcedure;
-import src.mas.util.Debug;
+import mas.agents.AgentExplorateur;
+import mas.protocols.IProtocol;
+import mas.protocols.BlocageProtocol;
+import mas.behaviours.blocker.MoveBlock;
+import mas.behaviours.blocker.BlocageProcedure;
+import mas.util.Debug;
 
 public class BlockerBehaviour extends SimpleBehaviour {
 

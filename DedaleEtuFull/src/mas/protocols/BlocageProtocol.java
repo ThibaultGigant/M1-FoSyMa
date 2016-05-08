@@ -1,12 +1,12 @@
-package src.mas.protocols;
+package mas.protocols;
 
 import java.util.List;
 
 import mas.abstractAgent;
-//import src.mas.behaviours.blocker.AnswerBlockerBehaviour;
-import src.mas.behaviours.blocker.BlockerBehaviour;
-//import src.mas.behaviours.move.MoveBehaviour;
-//import src.mas.strategies.StopStrategy;
+//import mas.behaviours.blocker.AnswerBlockerBehaviour;
+import mas.behaviours.blocker.BlockerBehaviour;
+//import mas.behaviours.move.MoveBehaviour;
+//import mas.strategies.StopStrategy;
 
 /**
  * Created by Tigig on 09/03/2016.

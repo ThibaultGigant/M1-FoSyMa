@@ -1,4 +1,4 @@
-package src.mas.agents;
+package mas.agents;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,10 +14,10 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 
 import mas.abstractAgent;
-import src.mas.protocols.IProtocol;
-import src.mas.protocols.ExplorationProtocol;
-import src.mas.protocols.HunterProtocol;
-import src.mas.util.Knowledge;
+import mas.protocols.IProtocol;
+import mas.protocols.ExplorationProtocol;
+import mas.protocols.HunterProtocol;
+import mas.util.Knowledge;
 
 /**
  * Agent principal du projet

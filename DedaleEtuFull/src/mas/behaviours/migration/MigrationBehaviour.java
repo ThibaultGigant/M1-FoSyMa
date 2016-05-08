@@ -1,4 +1,4 @@
-package src.mas.behaviours.migration;
+package mas.behaviours.migration;
 
 import jade.core.Agent;
 import jade.core.ContainerID;

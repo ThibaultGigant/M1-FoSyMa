@@ -1,14 +1,14 @@
-package src.mas.protocols;
+package mas.protocols;
 
 import jade.core.behaviours.Behaviour;
 import mas.abstractAgent;
-import src.mas.behaviours.communication.AckReceiveKnowledgeBehaviour;
-import src.mas.behaviours.communication.ReceiveKnowledgeBehaviour;
-import src.mas.behaviours.communication.SendKnowledgeBehaviour;
-import src.mas.behaviours.move.MoveBehaviour;
-import src.mas.behaviours.move.ObservationBehaviour;
-import src.mas.strategies.ExploreStrategy;
-import src.mas.strategies.IStrategy;
+import mas.behaviours.communication.AckReceiveKnowledgeBehaviour;
+import mas.behaviours.communication.ReceiveKnowledgeBehaviour;
+import mas.behaviours.communication.SendKnowledgeBehaviour;
+import mas.behaviours.move.MoveBehaviour;
+import mas.behaviours.move.ObservationBehaviour;
+import mas.strategies.ExploreStrategy;
+import mas.strategies.IStrategy;
 
 import java.util.List;
 

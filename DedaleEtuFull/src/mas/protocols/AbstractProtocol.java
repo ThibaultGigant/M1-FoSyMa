@@ -1,4 +1,4 @@
-package src.mas.protocols;
+package mas.protocols;
 
 import jade.core.behaviours.Behaviour;
 import mas.abstractAgent;

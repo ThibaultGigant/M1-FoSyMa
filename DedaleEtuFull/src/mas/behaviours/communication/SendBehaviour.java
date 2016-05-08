@@ -1,8 +1,8 @@
-package src.mas.behaviours.communication;
+package mas.behaviours.communication;
 
 import java.io.IOException;
 
-import src.mas.agents.AgentExplorateur;
+import mas.agents.AgentExplorateur;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;

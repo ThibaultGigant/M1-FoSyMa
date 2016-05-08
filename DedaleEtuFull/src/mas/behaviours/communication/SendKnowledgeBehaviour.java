@@ -1,4 +1,4 @@
-package src.mas.behaviours.communication;
+package mas.behaviours.communication;
 
 import jade.core.AID;
 import jade.core.Agent;
@@ -8,7 +8,7 @@ import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-import src.mas.agents.AgentExplorateur;
+import mas.agents.AgentExplorateur;
 
 import java.io.IOException;
 

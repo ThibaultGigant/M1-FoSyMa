@@ -1,9 +1,9 @@
-package src.mas.strategies;
+package mas.strategies;
 
 import mas.abstractAgent;
 import org.graphstream.graph.Graph;
-import src.mas.agents.AgentExplorateur;
-import src.mas.protocols.BlocageProtocol;
+import mas.agents.AgentExplorateur;
+import mas.protocols.BlocageProtocol;
 
 import java.util.ArrayList;
 import java.util.List;

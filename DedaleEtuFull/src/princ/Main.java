@@ -14,9 +14,9 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
-import src.mas.agents.AgentExplorateur;
-import src.mas.protocols.IProtocol;
-import src.mas.protocols.ExplorationProtocol;
+import mas.agents.AgentExplorateur;
+import mas.protocols.IProtocol;
+import mas.protocols.ExplorationProtocol;
 
 
 public class Main {

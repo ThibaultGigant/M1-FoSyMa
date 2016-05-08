@@ -1,4 +1,4 @@
-package src.mas.behaviours.move;
+package mas.behaviours.move;
 
 import env.Attribute;
 import env.Couple;
@@ -6,8 +6,8 @@ import org.junit.Assert;
 
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
-import src.mas.agents.AgentExplorateur;
-import src.mas.strategies.IStrategy;
+import mas.agents.AgentExplorateur;
+import mas.strategies.IStrategy;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package src.mas.behaviours.blocker;
+package mas.behaviours.blocker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 import mas.abstractAgent;
-import src.mas.agents.AgentExplorateur;
-import src.mas.util.Debug;
+import mas.agents.AgentExplorateur;
+import mas.util.Debug;
 
 /**
  * Created by Fayçal on 06/05/2016.

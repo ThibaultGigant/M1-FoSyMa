@@ -1,4 +1,4 @@
-package src.mas.util;
+package mas.util;
 
 import env.Attribute;
 import env.Couple;

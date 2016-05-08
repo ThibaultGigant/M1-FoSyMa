@@ -1,4 +1,4 @@
-package src.mas.strategies;
+package mas.strategies;
 
 import org.graphstream.graph.Graph;
 

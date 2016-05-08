@@ -1,4 +1,4 @@
-package src.mas.util;
+package mas.util;
 
 /**
  * Created by Fayçal on 08/05/2016.
