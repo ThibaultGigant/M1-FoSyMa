@@ -40,7 +40,7 @@ public class ExploreStrategy implements IStrategy {
 
         // Récupération du chemin
         if (path.isEmpty()) {
-            path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", casesToAvoid);
+            path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", "false", casesToAvoid);
             casesToAvoid.clear();
         }
 

@@ -152,7 +152,8 @@ public class BlockerBehaviour extends SimpleBehaviour {
 			if (!blockers.isEmpty()) {
 				myValue = (float) finalBlockerInfo[3];
 				finalBlockerInfo = blockers.get(blockers.size() - 1);
-				blockers.clear();
+				//blockers.clear();
+				blockers.remove(blockers.size() - 1 );
 				//blockerAgentInfo = finalBlockerInfo = null;
 				path.clear();
 				path.add((String)finalBlockerInfo[1]);

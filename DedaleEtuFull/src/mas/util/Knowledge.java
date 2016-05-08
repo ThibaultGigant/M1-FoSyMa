@@ -57,7 +57,7 @@ public class Knowledge implements Serializable {
         this.myAgent = myAgent;
         this.graph = graph;
         this.currentPosition = this.graph.addNode(this.myAgent.getCurrentPosition());
-        this.currentPosition.setAttribute("visited", true);
+        this.currentPosition.setAttribute("visited", "true");
         this.currentPosition.setAttribute("ui.class", "agent");
         this.currentPosition.setAttribute("date", new Date());
     }
@@ -94,7 +94,7 @@ public class Knowledge implements Serializable {
                 Date oldDate = (Date) n.getAttribute("date");
                 Date newDate = (Date) newKnowledge.get("nodes").get(nodeID).get("date");
                 if (oldDate.compareTo(newDate) < 0
-                        && !((boolean) n.getAttribute("visited") && !(boolean) newKnowledge.get("nodes").get(nodeID).get("visited"))) {
+                        && !((boolean) n.getAttribute("visited") && ((String) newKnowledge.get("nodes").get(nodeID).get("visited")).equals("false"))) {
                     for (String key: newKnowledge.get("nodes").get(nodeID).keySet()) {
                         n.setAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
                     }
@@ -188,7 +188,7 @@ public class Knowledge implements Serializable {
                 n.addAttribute("contenu", couple.getRight());
                 // Ajout des arêtes et changement des statuts
                 if (!n.getId().equals(currentNode)) {
-                    n.addAttribute("visited", false);
+                    n.addAttribute("visited", "false");
                 }
             }
 
@@ -208,13 +208,13 @@ public class Knowledge implements Serializable {
             }
             else if (attr.contains(Attribute.WUMPUS)) {
                 n.setAttribute("ui.class", "wumpus");
-                n.setAttribute("visited", true);
+                n.setAttribute("visited", "true");
             }
             else if (attr.contains(Attribute.HOWL) || attr.contains(Attribute.STENCH)) {
                 n.setAttribute("ui.class", "stench");
-                n.setAttribute("visited", true);
+                n.setAttribute("visited", "true");
             }
-            else if (!((boolean) n.getAttribute("visited"))) {
+            else if (((String) n.getAttribute("visited")).equals("false")) {
                 n.setAttribute("ui.class", "unvisited");
             }
         }
@@ -237,12 +237,15 @@ public class Knowledge implements Serializable {
         else if (attributes.contains(Attribute.TREASURE)) {
             this.currentPosition.setAttribute("ui.class", "treasure");
             this.currentPosition.setAttribute("ui.label", "treasure" + this.currentPosition.getId());
+            if (!currentPosition.hasAttribute("ciblé")) {
+                this.currentPosition.setAttribute("ciblé", new TreasureTargeted(null, -1, new Date()));
+            }
         }
         else {
             this.currentPosition.setAttribute("ui.class", "visited");
         }
         this.currentPosition = this.graph.getNode(this.myAgent.getCurrentPosition());
-        this.currentPosition.setAttribute("visited", true);
+        this.currentPosition.setAttribute("visited", "true");
         this.currentPosition.setAttribute("ui.class", "agent");
     }
 
