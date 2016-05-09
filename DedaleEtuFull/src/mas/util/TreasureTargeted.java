@@ -35,6 +35,12 @@ public class TreasureTargeted {
     }
 
     public String toString() {
-        return "(" + agent.getLocalName() + ", " + value + ", " + date.toString() + ")";
+        String name = "";
+        String d = "";
+        if (agent != null)
+            name = agent.getLocalName();
+        if (date != null)
+            d = date.toString();
+        return "(" + name + ", " + value + ", " + d + ")";
     }
 }

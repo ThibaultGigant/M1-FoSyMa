@@ -128,10 +128,11 @@ public class HunterStrategy implements IStrategy {
                     TreasureTargeted target = (TreasureTargeted) knowledge.getNode(path.get(path.size() - 1)).getAttribute("ciblé");
                     System.out.println(myAgent.getLocalName() + " " + target.toString());
                     int myValue = valuation(knowledge.getNode(path.get(path.size() - 1)));
-                    if (target.value >= myValue) {
+                    if (target.value < 0 || target.value >= myValue) {
                         target.value = myValue;
                         target.agent = myAgent.getAID();
                         target.date = new Date();
+                        knowledge.getNode(path.get(path.size() - 1)).setAttribute("ciblé", target);
                         treasureToPurchase = path.get(path.size() - 1);
                     }
                 }

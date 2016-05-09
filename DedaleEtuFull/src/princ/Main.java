@@ -32,14 +32,14 @@ public class Main {
 
 		//0) Create the real environment and the observed one
 		//env= new Environment(ENVtype.GRID,3,null);
-		env= new Environment(ENVtype.DOROGOVTSEV_T,15,null);
+		env= new Environment(ENVtype.DOROGOVTSEV_T,50,null);
 
 
 		//1), create the platform (Main container (DF+AMS) + containers + monitoring agents : RMA and SNIFFER)
 		rt=emptyPlatform(containerList);
 
 		//2) create agents and add them to the platform.
-		agentList=createAgents(containerList, 2, "explorer", 0);
+		agentList=createAgents(containerList, 4, "explorer", 2);
 		//addAgents(agentList, containerList, 2, "hunter");
 
 		//List<AgentController> wumpusList = ArrayList<AgentController>();
