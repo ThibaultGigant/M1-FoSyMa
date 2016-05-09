@@ -51,8 +51,6 @@ public class HunterStrategy implements IStrategy {
     public boolean moveTo(Graph knowledge) {
         String destination;
 
-        System.out.println(myAgent.getLocalName() + " " + treasureToPurchase + " " + path.toString());
-
         // Si l'on n'a plus de place dans notre sac
         if (myAgent.getBackPackFreeSpace() == 0) {
             System.out.println(this.myAgent.getLocalName() + " | Fin Hunter sac");
@@ -69,7 +67,6 @@ public class HunterStrategy implements IStrategy {
 
         // Si on a atteind notre objectif
         if (path.isEmpty() && myAgent.getCurrentPosition().equals(treasureToPurchase)) {
-            System.out.println("objectif");
             for (Attribute attr : ((List< Attribute>) knowledge.getNode(myAgent.getCurrentPosition()).getAttribute("contenu"))) {
                 if (attr.equals(Attribute.TREASURE) && (Integer) attr.getValue() > 0 ) {
                     int tic = myAgent.getBackPackFreeSpace();
@@ -126,7 +123,6 @@ public class HunterStrategy implements IStrategy {
             if (path.size() > 0 && ((List< Attribute>) knowledge.getNode(path.get(path.size() - 1)).getAttribute("contenu")).contains(Attribute.TREASURE)) {
                 if (knowledge.getNode(path.get(path.size() - 1)).hasAttribute("ciblé")) {
                     TreasureTargeted target = (TreasureTargeted) knowledge.getNode(path.get(path.size() - 1)).getAttribute("ciblé");
-                    System.out.println(myAgent.getLocalName() + " " + target.toString());
                     int myValue = valuation(knowledge.getNode(path.get(path.size() - 1)));
                     if (target.value < 0 || target.value >= myValue) {
                         target.value = myValue;

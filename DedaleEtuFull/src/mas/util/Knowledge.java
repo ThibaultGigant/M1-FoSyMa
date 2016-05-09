@@ -162,6 +162,7 @@ public class Knowledge implements Serializable {
          * Sinon mettre à jour ses données avec ce qu'on a observé
          */
         for (Couple<String, List<Attribute>> couple: lobs) {
+            System.out.println(couple.getRight().toString());
             n = this.getGraph().getNode(couple.getLeft());
             attr = couple.getRight();
 

@@ -85,7 +85,6 @@ public class ExploreStrategy implements IStrategy {
         	System.out.println(this.myAgent.getLocalName() + " | Fin");
             //((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             ((AgentExplorateur) this.myAgent).setProtocol(new HunterProtocol());
-            //System.out.println("Hakuna");
             return false;
         }
         // Sinon on va au prochain point sur le chemin
@@ -93,7 +92,6 @@ public class ExploreStrategy implements IStrategy {
             // On y va seulement s'il est toujours considéré comme "visited" (updateKnowledge entre temps ?)
             if (!knowledge.getNode(path.get(path.size() - 1)).hasAttribute("visited")) {
                 path.clear();
-                //System.out.println("Matata");
                 return true;
             }
 
@@ -114,7 +112,6 @@ public class ExploreStrategy implements IStrategy {
         					.setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
         }
 
-        //System.out.println("Sugarplum");
         return true;
     }
 
