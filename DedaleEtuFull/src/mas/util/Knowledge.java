@@ -94,8 +94,15 @@ public class Knowledge implements Serializable {
                 Date oldDate = (Date) n.getAttribute("date");
                 Date newDate = (Date) newKnowledge.get("nodes").get(nodeID).get("date");
                 if (oldDate.compareTo(newDate) < 0
-                        && !((boolean) n.getAttribute("visited") && ((String) newKnowledge.get("nodes").get(nodeID).get("visited")).equals("false"))) {
+                        && ((String) n.getAttribute("visited")).equals("false") && ((String) newKnowledge.get("nodes").get(nodeID).get("visited")).equals("false")) {
                     for (String key: newKnowledge.get("nodes").get(nodeID).keySet()) {
+                        if (key == "ciblé") {
+                            TreasureTargeted target = (TreasureTargeted) newKnowledge.get("nodes").get(nodeID).get(key);
+                            if ( n.hasAttribute("ciblé") && (((Date)target.date).compareTo(((TreasureTargeted)n.getAttribute("ciblé")).date ) > 0 && target.value >= 0 ) ) {
+                                n.setAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
+                            }
+                            break;
+                        }
                         n.setAttribute(key, newKnowledge.get("nodes").get(nodeID).get(key));
                     }
                 }
@@ -192,25 +199,21 @@ public class Knowledge implements Serializable {
                     n.addAttribute("visited", "false");
                 }
 
-                if (!n.getId().equals(currentNode)) {
+            }
+            if (!n.getId().equals(currentNode)) {
 
-                    // Ajout de l'arête entre le noeud courant et le noeud observé.
-                    try {
+                // Ajout de l'arête entre le noeud courant et le noeud observé.
+                try {
+                    if (this.getGraph().getEdge(currentNode + n.getId()) == null && this.getGraph().getEdge(n.getId() + currentNode) == null)
                         this.getGraph().addEdge(currentNode + n.getId(), currentNode, n.getId()).setAttribute("date", date);
-                    } catch (Exception e) {
-                        continue;
-                    }
+                } catch (Exception e) {
+                    continue;
                 }
-
             }
 
 
 
-            if (attr.contains(Attribute.TREASURE)) {
-                n.setAttribute("ui.class", "treasure");
-                n.setAttribute("ui.label", "treasure" + n.getId());
-            }
-            else if (attr.contains(Attribute.WIND)) {
+            if (attr.contains(Attribute.WIND)) {
                 n.setAttribute("ui.class", "wind");
             }
             else if (attr.contains(Attribute.WUMPUS)) {
@@ -221,6 +224,10 @@ public class Knowledge implements Serializable {
                 n.setAttribute("ui.class", "stench");
                 //n.setAttribute("visited", "true");
                 //n.setAttribute("visited", "false"); // Les Wumpus ne tuent pas, nous pouvons donc aller sur ces cases.
+            }
+            else if (attr.contains(Attribute.TREASURE)) {
+                n.setAttribute("ui.class", "treasure");
+                n.setAttribute("ui.label", "treasure" + n.getId());
             }
             else if (((String) n.getAttribute("visited")).equals("false")) {
                 n.setAttribute("ui.class", "unvisited");
@@ -249,7 +256,7 @@ public class Knowledge implements Serializable {
             this.currentPosition.setAttribute("ui.class", "treasure");
             this.currentPosition.setAttribute("ui.label", "treasure" + this.currentPosition.getId());
             if (!currentPosition.hasAttribute("ciblé")) {
-                this.currentPosition.setAttribute("ciblé", new TreasureTargeted(null, -1, new Date()));
+                this.currentPosition.setAttribute("ciblé", new TreasureTargeted(null, -2, new Date()));
             }
         }
         else {

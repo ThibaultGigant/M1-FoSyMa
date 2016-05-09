@@ -18,13 +18,15 @@ import java.util.List;
  * Created by Tigig on 13/02/2016.
  */
 public class ExplorationProtocol extends AbstractProtocol {
-    IStrategy strategy;
+    IStrategy strategy = null;
     @Override
     public void addBehaviours(abstractAgent myAgent) {
         //behaviours.add(new ObservationBehaviour(myAgent, 500));
 
-        strategy = new ExploreStrategy();
-        strategy.setMyAgent(myAgent);
+        if (strategy == null) {
+            strategy = new ExploreStrategy();
+            strategy.setMyAgent(myAgent);
+        }
         behaviours.add(new MoveBehaviour(myAgent, 500, strategy));
 
         behaviours.add(new SendKnowledgeBehaviour(myAgent, 500));

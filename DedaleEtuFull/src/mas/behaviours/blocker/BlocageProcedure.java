@@ -27,7 +27,7 @@ public class BlocageProcedure {
     private int counter = 0;
     private int maxTry = 10;
 
-    private boolean debugFlag = true;
+    private boolean debugFlag = false;
 
     public BlocageProcedure(abstractAgent myAgent, List<String> path, List<Object[]> othersAgentInfo) {
         this.myAgent = myAgent;

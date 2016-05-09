@@ -2,6 +2,7 @@ package mas.util;
 
 import env.Attribute;
 import env.Couple;
+import jade.core.AID;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -103,7 +104,7 @@ public class GraphTools {
         return path;
     }
 
-    public static List<String> bestPath(String currentPosition, Graph graph, List<String> casesToAvoid, int bagContent) {
+    public static List<String> bestPath(AID agent, String currentPosition, Graph graph, List<String> casesToAvoid, int bagContent) {
         /**
          * Initialisation des variables nécessaires
          * ----------------------------------------
@@ -153,15 +154,27 @@ public class GraphTools {
                     peres.put(tempNode.getId(), pere.getId());
                     nodes.add(tempNode.getId());
 
-                    // Si c'est un trésor, le garder en mémoire
+                    // Si c'est un trésor, le garder en mémoire, si aucun agent ne le cible avec une meilleur priorité
                     List<Attribute> attr = tempNode.getAttribute("contenu");
                     for (Attribute attribute : attr) {
                         if (attribute.equals(Attribute.TREASURE)) {
-                            treasures.put(tempNode.getId(), (Integer) attribute.getValue());
+                            if (tempNode.hasAttribute("ciblé")) {
+
+                                // Valeur de priorité
+                                int valeur = bagContent - (Integer) attribute.getValue();
+                                if (valeur < 0)
+                                    valeur *= -2;
+
+                                // On ne traite que les trésors non ciblé par des agents plus apte
+                                if (((TreasureTargeted) tempNode.getAttribute("ciblé")).value < 0 || ((TreasureTargeted) tempNode.getAttribute("ciblé")).value >=  valeur){
+                                    treasures.put(tempNode.getId(), (Integer) attribute.getValue());
+                                    treasuresTargeted.put(tempNode.getId(), (TreasureTargeted) tempNode.getAttribute("ciblé"));
+                                }
+                            }
+                            else {
+                                treasures.put(tempNode.getId(), (Integer) attribute.getValue());
+                            }
                             break;
-                        }
-                        else if (attribute.equals("ciblé")) {
-                            treasuresTargeted.put(tempNode.getId(), (TreasureTargeted) attribute.getValue());
                         }
                     }
                 }
@@ -185,7 +198,7 @@ public class GraphTools {
         for (String treasurePlace : treasures.keySet())
             treasuresPath.put(treasurePlace, foundPath(peres, currentPosition, treasurePlace));
 
-        return bestTreasure(treasuresPath, treasuresToWumpus, bagContent, treasures, treasuresTargeted);
+        return bestTreasure(agent, treasuresPath, treasuresToWumpus, bagContent, treasures, treasuresTargeted);
     }
 
     /**
@@ -221,7 +234,7 @@ public class GraphTools {
      * @param treasures             : HashMap des montant des trésors, indexé par leurs positions
      * @return                      : Le chemin menant au meilleur trésor, s'il y en a un, sinon une liste vide
      */
-    private static List<String> bestTreasure(HashMap<String, List<String>> treasuresPath, HashMap<String, Integer> treasuresToWumpus, int bagContent, HashMap<String,Integer> treasures, HashMap<String, TreasureTargeted> treasuresTargeted) {
+    private static List<String> bestTreasure(AID agent, HashMap<String, List<String>> treasuresPath, HashMap<String, Integer> treasuresToWumpus, int bagContent, HashMap<String,Integer> treasures, HashMap<String, TreasureTargeted> treasuresTargeted) {
         List<String> path;
         List<String> shortestPath = new ArrayList<String>();
         List<String> inDangerPath = new ArrayList<String>();
@@ -257,6 +270,7 @@ public class GraphTools {
 
         // S'il y a un trésor en danger
         if (!inDangerPath.isEmpty()) {
+            System.out.println("inDanger");
             return inDangerPath;
         }
 

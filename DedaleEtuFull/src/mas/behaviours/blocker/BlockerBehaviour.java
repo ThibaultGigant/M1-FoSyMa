@@ -1,6 +1,7 @@
 package mas.behaviours.blocker;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import env.Attribute;
@@ -9,6 +10,8 @@ import jade.core.AID;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 
 import mas.agents.AgentExplorateur;
 import mas.protocols.IProtocol;
@@ -62,7 +65,7 @@ public class BlockerBehaviour extends SimpleBehaviour {
 	 */
 	private int state = 0;
 
-	private boolean debugFlag = true;
+	private boolean debugFlag = false;
 
 	public BlockerBehaviour(final mas.abstractAgent myagent, List<String> path) {
 		super(myagent);
@@ -343,6 +346,20 @@ public class BlockerBehaviour extends SimpleBehaviour {
 	}
 
 	private float valuation() {
+
+		// Si on est dans un cul-de-sac
+		int count = 0;
+		Iterator<Node> nodes = ((Node)(((Graph)((AgentExplorateur)myAgent).getKnowledge().getGraph()).getNode(((mas.abstractAgent)myAgent).getCurrentPosition()))).getNeighborNodeIterator();
+		Node tmp;
+		while (nodes.hasNext()) {
+			tmp = nodes.next();
+			if (tmp.getId() != path.get(0) && !casesToAvoid.contains(tmp))
+				count++;
+		}
+
+		if (count == 0)
+			return 1000; // Forcer la priorité
+
 		String job = ((AgentExplorateur) this.myAgent).getJob();
 
 		float result;
@@ -477,6 +494,9 @@ public class BlockerBehaviour extends SimpleBehaviour {
 		for (String caseToAvoid : this.casesToAvoid) {
 			if (lastProtocol.getCasesToAvoid() != null && !lastProtocol.getCasesToAvoid().isEmpty() && !lastProtocol.getCasesToAvoid().contains(caseToAvoid))
 				lastProtocol.getCasesToAvoid().add(caseToAvoid);
+			else if (lastProtocol.getCasesToAvoid() != null && lastProtocol.getCasesToAvoid().isEmpty()) {
+				lastProtocol.getCasesToAvoid().add(caseToAvoid);
+			}
 		}
 		((AgentExplorateur)this.myAgent).setProtocol(lastProtocol);
 		this.finished = true;

@@ -39,6 +39,8 @@ public class HunterProtocol extends AbstractProtocol {
 
     @Override
     public List<String> getCasesToAvoid() {
+        if (strategy == null)
+            return null;
         return this.strategy.getCasesToAvoid();
     }
 

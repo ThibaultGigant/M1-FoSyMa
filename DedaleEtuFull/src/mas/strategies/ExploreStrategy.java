@@ -38,6 +38,9 @@ public class ExploreStrategy implements IStrategy {
     private int maxBlocage = 10;
     private String lastPlace = "";
 
+    private int countAvoid = 0;
+    private int maxAvoid = 20;
+
     @Override
     public boolean moveTo(Graph knowledge) {
         String destination;
@@ -47,10 +50,8 @@ public class ExploreStrategy implements IStrategy {
             String tmp = myAgent.getCurrentPosition();
             path.clear();
             path.add(lastPlace);
-            System.out.println("la");
             lastPlace = "";
-            if (this.myAgent.moveTo(lastPlace)) {
-                lastPlace = "";
+            if (this.myAgent.moveTo(path.get(0))) {
                 countBlocage = 0;
                 path.clear();
                 return true;
@@ -60,27 +61,31 @@ public class ExploreStrategy implements IStrategy {
             }
 
             if (countBlocage >= maxBlocage) {
-                System.out.println("isWumpus");
                 ((AgentExplorateur) this.myAgent)
                         .setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
             }
-
             return true;
         }
 
         // Récupération du chemin
         if (path.isEmpty()) {
             path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", "false", casesToAvoid);
-            if (!path.isEmpty())
+            if (path.isEmpty() && !casesToAvoid.isEmpty()) {
                 casesToAvoid.clear();
+                if (countAvoid <= maxAvoid) {
+                    path = GraphTools.pathToTarget(myAgent.getCurrentPosition(), knowledge, "visited", "false", casesToAvoid);
+                    countAvoid++;
+                }
+            }
 
         }
 
         // Si le chemin est vide, c'est qu'on a tout visité
-        if (path.isEmpty()) {
+        if (path.isEmpty() ) {
         	System.out.println(this.myAgent.getLocalName() + " | Fin");
             //((AgentExplorateur) this.myAgent).setProtocol(new RandomObserveProtocol());
             ((AgentExplorateur) this.myAgent).setProtocol(new HunterProtocol());
+            //System.out.println("Hakuna");
             return false;
         }
         // Sinon on va au prochain point sur le chemin
@@ -88,6 +93,7 @@ public class ExploreStrategy implements IStrategy {
             // On y va seulement s'il est toujours considéré comme "visited" (updateKnowledge entre temps ?)
             if (!knowledge.getNode(path.get(path.size() - 1)).hasAttribute("visited")) {
                 path.clear();
+                //System.out.println("Matata");
                 return true;
             }
 
@@ -107,7 +113,8 @@ public class ExploreStrategy implements IStrategy {
         	((AgentExplorateur) this.myAgent)
         					.setProtocol(new BlocageProtocol(this.myAgent, this.path, ( (AgentExplorateur) this.myAgent).getProtocol()));
         }
-        
+
+        //System.out.println("Sugarplum");
         return true;
     }
 

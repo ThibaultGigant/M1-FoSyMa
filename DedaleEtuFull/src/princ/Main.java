@@ -1,4 +1,4 @@
-package src.princ;
+package princ;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,15 +32,18 @@ public class Main {
 
 		//0) Create the real environment and the observed one
 		//env= new Environment(ENVtype.GRID,3,null);
-		env= new Environment(ENVtype.DOROGOVTSEV_WT,40,null);
+		env= new Environment(ENVtype.DOROGOVTSEV_T,15,null);
 
 
 		//1), create the platform (Main container (DF+AMS) + containers + monitoring agents : RMA and SNIFFER)
 		rt=emptyPlatform(containerList);
 
 		//2) create agents and add them to the platform.
-		agentList=createAgents(containerList, 5, "explorer");
+		agentList=createAgents(containerList, 2, "explorer", 0);
 		//addAgents(agentList, containerList, 2, "hunter");
+
+		//List<AgentController> wumpusList = ArrayList<AgentController>();
+		//createWumpuss(agentList, containerList, 2);
 
 		//3) launch agents
 		startAgents(agentList);
@@ -173,7 +176,7 @@ public class Main {
 	 *@param containerList :Name and container's ref
 	 *@return the agentList
 	 */
-	private static List<AgentController> createAgents(HashMap<String, ContainerController> containerList, int nbAgents, String job) {
+	private static List<AgentController> createAgents(HashMap<String, ContainerController> containerList, int nbAgents, String job, int nbWumpus) {
 		System.out.println("Launching agents...");
 		ContainerController c;
 		List<AgentController> agentList=new ArrayList<AgentController>();
@@ -196,9 +199,33 @@ public class Main {
 			createAgent(c, agentList, name + i, job);
 
 		// Ajout du wumpus à l'environnement
-		//createWumpus(c, agentList, "Golem");
+		for ( int i = 1 ; i <= nbWumpus ; i++)
+			createWumpus(c, agentList, "Golem" + i);
 
 		System.out.println("Agents launched...");
+		return agentList;
+	}
+
+	/**
+	 *  Creates the agents and add them to the agentList.  agents are NOT started.
+	 *@param containerList :Name and container's ref
+	 *@return the agentList
+	 */
+	private static List<AgentController> createWumpuss(List<AgentController> agentList, HashMap<String, ContainerController> containerList, int nbAgents) {
+		System.out.println("Launching wumpus...");
+		ContainerController c;
+
+		//Agent0 on container0
+		c = containerList.get("container0");
+
+		// Ajout des agents
+		for (int i = 1 ; i <= nbAgents ; i++)
+			createWumpus(c, agentList, "Golem" + i);
+
+		// Ajout du wumpus à l'environnement
+		//createWumpus(c, agentList, "Golem");
+
+		System.out.println("Wumpus launched...");
 		return agentList;
 	}
 

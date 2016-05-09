@@ -27,4 +27,14 @@ public class TreasureTargeted {
     public TreasureTargeted copy() {
         return new TreasureTargeted(agent, value, date);
     }
+
+    public void done() {
+        this.value = -1;
+        this.agent = null;
+        this.date = new Date();
+    }
+
+    public String toString() {
+        return "(" + agent.getLocalName() + ", " + value + ", " + date.toString() + ")";
+    }
 }

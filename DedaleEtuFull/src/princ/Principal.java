@@ -1,4 +1,4 @@
-package src.princ;
+package princ;
 
 
 
