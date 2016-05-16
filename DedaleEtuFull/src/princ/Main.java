@@ -15,6 +15,7 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
 import mas.agents.AgentExplorateur;
+import mas.agents.DummyWumpusAgent;
 import mas.protocols.IProtocol;
 import mas.protocols.ExplorationProtocol;
 
@@ -32,14 +33,15 @@ public class Main {
 
 		//0) Create the real environment and the observed one
 		//env= new Environment(ENVtype.GRID_W,1,null);
-		env= new Environment(ENVtype.DOROGOVTSEV_T,50,null);
+		//env= new Environment(ENVtype.DOROGOVTSEV_T,50,null);
+		env=new Environment("src/main/resources/map2016","src/main/resources/map2016-config");
 
 
 		//1), create the platform (Main container (DF+AMS) + containers + monitoring agents : RMA and SNIFFER)
 		rt=emptyPlatform(containerList);
 
 		//2) create agents and add them to the platform.
-		agentList=createAgents(containerList, 5, "explorer", 2);
+		agentList=createAgents(containerList, 5, "explorer", 0);
 		//addAgents(agentList, containerList, 2, "hunter");
 
 		//List<AgentController> wumpusList = ArrayList<AgentController>();
@@ -187,7 +189,7 @@ public class Main {
 		String name = "";
 		switch (job) {
 			case "explorer":
-				name = "Explo";
+				name = "Agent";
 				break;
 			case "hunter":
 				name = "Hunter";
@@ -201,6 +203,18 @@ public class Main {
 		// Ajout du wumpus à l'environnement
 		for ( int i = 1 ; i <= nbWumpus ; i++)
 			createWumpus(c, agentList, "Golem" + i);
+
+		//wumpus on container0
+		c = containerList.get("container0");
+		String agentName="Golem";//"Wumpus1"
+		try {
+			Object[] objtab=new Object[]{env};//used to give informations to the agent
+			AgentController ag=c.createNewAgent(agentName,DummyWumpusAgent.class.getName(),objtab);
+			agentList.add(ag);
+			System.out.println(agentName+" launched");
+		} catch (StaleProxyException e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("Agents launched...");
 		return agentList;
@@ -244,7 +258,7 @@ public class Main {
 		String name = "";
 		switch (job) {
 			case "explorer":
-				name = "Explo";
+				name = "Agent";
 				break;
 			case "hunter":
 				name = "Hunter";

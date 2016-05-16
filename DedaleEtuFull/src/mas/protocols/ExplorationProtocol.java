@@ -27,9 +27,9 @@ public class ExplorationProtocol extends AbstractProtocol {
             strategy = new ExploreStrategy();
             strategy.setMyAgent(myAgent);
         }
-        behaviours.add(new MoveBehaviour(myAgent, 500, strategy));
+        behaviours.add(new MoveBehaviour(myAgent, 600, strategy));
 
-        behaviours.add(new SendKnowledgeBehaviour(myAgent, 500));
+        behaviours.add(new SendKnowledgeBehaviour(myAgent, 600));
         behaviours.add(new ReceiveKnowledgeBehaviour(myAgent));
         behaviours.add(new AckReceiveKnowledgeBehaviour(myAgent));
 
