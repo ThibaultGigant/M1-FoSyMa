@@ -1,0 +1,15 @@
+mapname:exam2016
+treasure:112:100
+treasure:96:60
+treasure:42:17
+treasure:33:46
+treasure:6:6
+treasure:14:24
+treasure:19:47
+
+wumpus:Golem:122:200
+agent:Agent1:75:70
+agent:Agent2:13:18
+agent:Agent3:5:41
+agent:Agent4:99:41
+agent:Agent5:93:50
